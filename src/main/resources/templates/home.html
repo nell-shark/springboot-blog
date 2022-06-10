@@ -106,7 +106,7 @@
     <div th:each="article : ${articles}">
         <div class="container h-100">
             <div class="row h-100 justify-content-center align-items-center">
-                <div class="col-12">
+                <div class="col-md-8">
                     <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-static">
                             <h3 class="mb-0" th:text="${article.title}"></h3>
@@ -118,9 +118,8 @@
                             <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
                                  role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
                                  focusable="false"><title>Placeholder</title>
-                                <rect width="100%" height="100%" fill="#55595c"></rect>
-                                <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-
+                                <img width="250" height="250"
+                                     th:src="@{'data:image/jpeg;base64,'+${article.getBase64EncodedImage()}}"/>
                             </svg>
                         </div>
                     </div>
@@ -128,7 +127,6 @@
             </div>
         </div>
     </div>
-
 </main>
 
 <footer class="py-3 my-4">

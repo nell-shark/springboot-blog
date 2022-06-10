@@ -1,26 +1,27 @@
 package com.nellshark.springbootblog.controller;
 
-import com.nellshark.springbootblog.model.Article;
+import com.nellshark.springbootblog.service.ArticleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping
 public class TemplateController {
+    private final ArticleService articleService;
+
+    @Autowired
+    public TemplateController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
+
     @GetMapping("/")
-    public String home(Model model){
-        List<Article> strings = List.of(
-                new Article("World", "Example", LocalDate.now(), "description"),
-                new Article("War", "Example", LocalDate.now(), "description"),
-                new Article("Piece", "Example", LocalDate.now(), "description")
-        );
-        model.addAttribute("articles", strings);
+    public String home(Model model) {
+        model.addAttribute("articles", articleService.getAllArticles());
         return "home";
     }
 }
