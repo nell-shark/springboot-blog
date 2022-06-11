@@ -5,10 +5,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public enum Role {
+public enum UserRole {
     USER(Set.of(Permission.READ_ARTICLES)),
 
-    AUTHOR(Set.of(
+    ADMIN(Set.of(
             Permission.READ_ARTICLES,
             Permission.WRITE_ARTICLES,
             Permission.EDIT_ARTICLES,
@@ -16,7 +16,7 @@ public enum Role {
 
     private final Set<Permission> permissions;
 
-    Role(Set<Permission> permissions) {
+    UserRole(Set<Permission> permissions) {
         this.permissions = permissions;
     }
 

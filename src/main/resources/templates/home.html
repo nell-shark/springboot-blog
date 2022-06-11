@@ -19,9 +19,8 @@
             </div>
         </div>
     </section>
-
-    <div th:each="article : ${articles}">
-        <div class="container h-100">
+    <div class="container h-100">
+        <div th:each="article : ${articles}">
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-md-8">
                     <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
@@ -32,7 +31,8 @@
                             <a href="#" class="stretched-link">Continue reading</a>
                         </div>
                         <div class="col-auto d-none d-lg-block">
-                            <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
+                            <svg class="bd-placeholder-img" width="200" height="250"
+                                 xmlns="http://www.w3.org/2000/svg"
                                  role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
                                  focusable="false"><title>Placeholder</title>
                                 <img width="250" height="250"
