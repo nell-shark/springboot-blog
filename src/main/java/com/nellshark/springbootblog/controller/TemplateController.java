@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Collections;
@@ -22,7 +23,7 @@ public class TemplateController {
 
     @GetMapping("/")
     public String home(Model model) {
-        List<Article> articles = articleService.getAllArticles()
+        List<Article> articles = articleService.findAllArticles()
                 .stream()
                 .sorted(Collections.reverseOrder())
                 .toList();
@@ -33,7 +34,26 @@ public class TemplateController {
 
     @GetMapping("/about")
     public String about(Model model) {
-        model.addAttribute("admins", appUserService.getAllAdmins());
+        model.addAttribute("admins", appUserService.findAllAdmins());
         return "about";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/register")
+    public String register() {
+        return "register";
+    }
+
+    @GetMapping("/articles/{id}")
+    public String article(@PathVariable Long id, Model model) {
+        Article article = articleService.findById(id);
+        model.addAttribute(article);
+        return "article";
+    }
+
+
 }

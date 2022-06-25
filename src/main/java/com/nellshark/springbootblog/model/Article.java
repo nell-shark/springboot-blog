@@ -38,7 +38,8 @@ public class Article implements Comparable<Article> {
     @Column(name = "image")
     private byte[] imageBytes;
 
-    public String getBase64EncodedImage() {
+    @Transient
+    public String image() {
         return Base64Utils.encodeToString(imageBytes);
     }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>About</title>
+    <title>Article</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="shortcut icon" type="image/png" th:href="@{favicon.png}"/>
@@ -11,16 +11,15 @@
 <body>
 <div th:insert="blocks/header :: header"></div>
 
-<main>
-    <div th:each="admin : ${admins}">
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <img width="140" height="140"
-                 th:src="${(admin.profilePhoto != null && !#strings.isEmpty(admin.profilePhoto))
-                             ? admin.profilePhoto : 'profile_photo.png'}"/>
-            <h2 class="fw-light mb-5" th:text="${admin.email}"></h2>
+<div class="container py-4">
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <img class="rounded" th:src="@{'data:image/jpeg;base64,'+${article.image}}"/>
+            <h1 class="display-5 fw-bold" th:text="${article.title}"></h1>
+            <p class="col-md-8 fs-4" th:text="${article.text}"></p>
         </div>
     </div>
-</main>
+</div>
 
 <div th:insert="blocks/footer :: footer"></div>
 </body>

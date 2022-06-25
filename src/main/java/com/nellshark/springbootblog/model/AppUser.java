@@ -39,10 +39,14 @@ public class AppUser implements UserDetails {
     @Lob
     @Type(type = "org.hibernate.type.BinaryType")
     @Column(name = "profile_photo")
-    private byte[] profilePhoto;
+    private byte[] profilePhotoBytes;
 
-    public String getBase64EncodedImage() {
-        return Base64Utils.encodeToString(profilePhoto);
+    @Transient
+    public String profilePhoto() {
+        if (profilePhotoBytes == null || profilePhotoBytes.length == 0) {
+            return null;
+        }
+        return Base64Utils.encodeToString(profilePhotoBytes);
     }
 
     @Override
