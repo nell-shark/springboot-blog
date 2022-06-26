@@ -28,7 +28,6 @@
                         <div class="col p-4 d-flex flex-column position-static">
                             <h3 class="mb-0" th:text="${article.title}"></h3>
                             <div class="mb-1 text-muted" th:text="${article.date}"></div>
-                            <p class="card-text mb-auto" th:text="${article.description}"></p>
                             <a th:href="@{'/articles/'+${article.id}}" class="stretched-link">Continue reading</a>
                         </div>
                         <div class="col-auto d-none d-lg-block">

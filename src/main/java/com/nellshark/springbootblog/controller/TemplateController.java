@@ -38,14 +38,14 @@ public class TemplateController {
         return "about";
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
+    @GetMapping("/sign-in")
+    public String signIn() {
+        return "sign-in";
     }
 
-    @GetMapping("/register")
-    public String register() {
-        return "register";
+    @GetMapping("/sign-up")
+    public String signUp() {
+        return "sign-up";
     }
 
     @GetMapping("/articles/{id}")

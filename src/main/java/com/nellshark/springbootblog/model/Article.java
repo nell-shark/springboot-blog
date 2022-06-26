@@ -24,9 +24,6 @@ public class Article implements Comparable<Article> {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "description")
-    private String description;
-
     @Column(name = "text")
     private String text;
 
@@ -40,6 +37,9 @@ public class Article implements Comparable<Article> {
 
     @Transient
     public String image() {
+        if (imageBytes == null || imageBytes.length == 0) {
+            return null;
+        }
         return Base64Utils.encodeToString(imageBytes);
     }
 
