@@ -1,8 +1,8 @@
 package com.nellshark.springbootblog.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,10 +13,9 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.UUID;
 
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "users")
 public class AppUser implements UserDetails {
@@ -47,6 +46,21 @@ public class AppUser implements UserDetails {
             return null;
         }
         return Base64Utils.encodeToString(profilePhotoBytes);
+    }
+
+    public AppUser(String email, String password, UserRole role) {
+        this.id = UUID.randomUUID();
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    public AppUser(String email, String password, UserRole role, byte[] profilePhotoBytes) {
+        this.id = UUID.randomUUID();
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.profilePhotoBytes = profilePhotoBytes;
     }
 
     @Override

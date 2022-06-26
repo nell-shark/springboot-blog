@@ -1,6 +1,5 @@
 package com.nellshark.springbootblog.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -12,7 +11,6 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 @Entity
 @Table(name = "articles")
@@ -41,6 +39,13 @@ public class Article implements Comparable<Article> {
             return null;
         }
         return Base64Utils.encodeToString(imageBytes);
+    }
+
+    public Article(String title, String text, LocalDate date, byte[] imageBytes) {
+        this.title = title;
+        this.text = text;
+        this.date = date;
+        this.imageBytes = imageBytes;
     }
 
     @Override
