@@ -2,7 +2,6 @@ package com.nellshark.springbootblog.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +14,6 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "users")
 public class AppUser implements UserDetails {

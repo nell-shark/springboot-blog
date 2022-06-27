@@ -6,21 +6,25 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum UserRole {
-    USER(Set.of(Permission.READ_ARTICLES)),
+    USER(Set.of(Authority.READ_ARTICLES)),
+
+    MODERATOR(Set.of(Authority.READ_ARTICLES,
+            Authority.CREATE_ARTICLES,
+            Authority.EDIT_ARTICLES)),
 
     ADMIN(Set.of(
-            Permission.READ_ARTICLES,
-            Permission.WRITE_ARTICLES,
-            Permission.EDIT_ARTICLES,
-            Permission.DELETE_ARTICLES));
+            Authority.READ_ARTICLES,
+            Authority.CREATE_ARTICLES,
+            Authority.EDIT_ARTICLES,
+            Authority.DELETE_ARTICLES));
 
-    private final Set<Permission> permissions;
+    private final Set<Authority> permissions;
 
-    UserRole(Set<Permission> permissions) {
+    UserRole(Set<Authority> permissions) {
         this.permissions = permissions;
     }
 
-    public Set<Permission> getPermissions() {
+    public Set<Authority> getPermissions() {
         return permissions;
     }
 

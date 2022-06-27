@@ -4,6 +4,7 @@ import com.nellshark.springbootblog.model.Article;
 import com.nellshark.springbootblog.service.AppUserService;
 import com.nellshark.springbootblog.service.ArticleService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Collections;
 import java.util.List;
-
 
 @Controller
 @RequestMapping
@@ -55,5 +55,9 @@ public class TemplateController {
         return "article";
     }
 
-
+    @GetMapping("api/admin/create-article")
+    @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
+    public String createArticle() {
+        return "admin/create-article";
+    }
 }

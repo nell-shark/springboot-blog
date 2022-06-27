@@ -9,7 +9,7 @@
     <link rel="shortcut icon" type="image/png" th:href="@{favicon.png}"/>
 </head>
 <body>
-<div th:insert="blocks/header :: header"></div>
+<div th:insert="block/header :: header"></div>
 
 <main>
     <div th:each="admin : ${admins}">
@@ -22,6 +22,6 @@
     </div>
 </main>
 
-<div th:insert="blocks/footer :: footer"></div>
+<div th:insert="block/footer :: footer"></div>
 </body>
 </html>

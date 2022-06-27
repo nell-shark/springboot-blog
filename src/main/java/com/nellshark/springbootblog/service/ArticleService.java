@@ -24,4 +24,8 @@ public class ArticleService {
         return articleRepository.findById(id).orElseThrow(
                 () -> new ArticleNotFoundException("Article with id = %s not found".formatted(id)));
     }
+
+    public void save(Article article) {
+        articleRepository.save(article);
+    }
 }

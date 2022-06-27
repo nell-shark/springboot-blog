@@ -21,8 +21,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/about").permitAll();
-
+                .and()
+                .formLogin()
+                .loginPage("/sign-in")
+                .permitAll()
+                .defaultSuccessUrl("/", true)
+                .usernameParameter("email")
+                .passwordParameter("password");
         return http.build();
     }
 
