@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class ArticleController {
     private final ArticleService articleService;
 
-    @PostMapping("api/admin/create-article")
+    @PostMapping("api/v1/create-article")
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
     public String postArticle(@RequestParam String title, @RequestParam String text) {
         Article article = new Article(title, text, LocalDate.now());

@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Collections;
-import java.util.List;
-
 @Controller
 @RequestMapping
 @AllArgsConstructor
@@ -22,14 +19,9 @@ public class TemplateController {
     private final AppUserService appUserService;
 
     @GetMapping("/")
-    public String home(Model model) {
-        List<Article> articles = articleService.findAllArticles()
-                .stream()
-                .sorted(Collections.reverseOrder())
-                .toList();
-
-        model.addAttribute("articles", articles);
-        return "home";
+    public String main(Model model) {
+        model.addAttribute("articles", articleService.findAllArticles());
+        return "main";
     }
 
     @GetMapping("/about")
@@ -51,13 +43,13 @@ public class TemplateController {
     @GetMapping("/articles/{id}")
     public String article(@PathVariable Long id, Model model) {
         Article article = articleService.findById(id);
-        model.addAttribute(article);
+        model.addAttribute("article", article);
         return "article";
     }
 
-    @GetMapping("api/admin/create-article")
+    @GetMapping("api/v1/create-article")
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
     public String createArticle() {
-        return "admin/create-article";
+        return "create-article";
     }
 }

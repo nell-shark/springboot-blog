@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "articles")
-public class Article implements Comparable<Article> {
+public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -53,7 +53,13 @@ public class Article implements Comparable<Article> {
     }
 
     @Override
-    public int compareTo(Article article) {
-        return this.id.compareTo(article.id);
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", date=" + date +
+                ", imageBytes=" + (imageBytes != null) +
+                '}';
     }
 }
