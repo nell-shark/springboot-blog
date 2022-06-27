@@ -27,7 +27,13 @@ public class SecurityConfig {
                 .permitAll()
                 .defaultSuccessUrl("/", true)
                 .usernameParameter("email")
-                .passwordParameter("password");
+                .passwordParameter("password")
+                .and()
+                .logout()
+                .logoutUrl("/sign-out")
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
         return http.build();
     }
 
