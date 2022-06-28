@@ -9,12 +9,12 @@ public enum UserRole {
     USER(Set.of(Authority.READ_ARTICLES)),
 
     MODERATOR(Set.of(Authority.READ_ARTICLES,
-            Authority.CREATE_ARTICLES,
+            Authority.CREATE_NEW_ARTICLES,
             Authority.EDIT_ARTICLES)),
 
     ADMIN(Set.of(
             Authority.READ_ARTICLES,
-            Authority.CREATE_ARTICLES,
+            Authority.CREATE_NEW_ARTICLES,
             Authority.EDIT_ARTICLES,
             Authority.DELETE_ARTICLES));
 

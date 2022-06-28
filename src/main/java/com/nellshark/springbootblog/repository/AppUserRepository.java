@@ -12,9 +12,13 @@ import java.util.UUID;
 
 @Repository
 public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
-    @Query("SELECT user FROM AppUser user WHERE user.email = ?1")
+    @Query("SELECT user " +
+            "FROM AppUser user " +
+            "WHERE user.email = ?1")
     Optional<AppUser> findByEmail(String email);
 
-    @Query("SELECT user FROM AppUser user WHERE user.role = ?1")
+    @Query("SELECT user " +
+            "FROM AppUser user " +
+            "WHERE user.role = ?1")
     List<AppUser> findByRole(UserRole role);
 }
