@@ -14,7 +14,7 @@
 <div class="container h-100">
     <div class="row h-100 justify-content-center align-items-center">
         <div class="col-md-8 mt-5">
-            <form class="needs-validation" action="api/v1/create-article" method="POST" novalidate>
+            <form class="needs-validation" action="/articles/create-new-article" method="POST" novalidate>
                 <label for="title" class="form-label">Title</label>
                 <input name="title" type="text" class="form-control" id="title" placeholder="" value="" required>
                 <div class="invalid-feedback">
@@ -28,6 +28,9 @@
                 </div>
                 <hr class="my-4">
                 <button class="w-100 btn btn-primary btn-lg" type="submit">Create</button>
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}"/>
             </form>
         </div>
     </div>

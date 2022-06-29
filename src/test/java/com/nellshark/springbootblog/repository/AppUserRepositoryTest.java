@@ -6,11 +6,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
+@TestPropertySource("/application-test.properties")
 class AppUserRepositoryTest {
     @Autowired
     private AppUserRepository underTest;
@@ -21,25 +22,23 @@ class AppUserRepositoryTest {
     }
 
     @Test
-    void testFindByEmail() {
+    void testFindUserByEmail() {
         String email = "test@gmail.com";
-        AppUser appUser = new AppUser(email, "password123", UserRole.USER);
-        underTest.save(appUser);
+        AppUser user = new AppUser(email, "password", UserRole.USER);
+        underTest.save(user);
 
-        boolean isUserExists = underTest.findByEmail(email).isPresent();
+        boolean userExists = underTest.findByEmail(email).isPresent();
 
-        assertTrue(isUserExists);
+        assertTrue(userExists);
     }
 
     @Test
-    void testFindByRole() {
-        AppUser appUser = new AppUser("test@gmail.com", "password123", UserRole.USER);
-        underTest.save(appUser);
+    void testFindUserByRole() {
+        AppUser user = new AppUser("test@gmail.com", "password123", UserRole.USER);
+        underTest.save(user);
 
-        boolean hasUsers = !underTest.findByRole(UserRole.USER).isEmpty();
-        boolean hasAdmins = !underTest.findByRole(UserRole.ADMIN).isEmpty();
+        boolean hasUser = !underTest.findByRole(UserRole.USER).isEmpty();
 
-        assertTrue(hasUsers);
-        assertFalse(hasAdmins);
+        assertTrue(hasUser);
     }
 }

@@ -20,14 +20,24 @@ public class AppUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        log.info("get user by email: " + email);
+        log.info("Find a user by email: " + email);
         return appUserRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Email '%s' not found in db".formatted(email)));
+                .orElseThrow(() -> new UsernameNotFoundException("Email '%s' was not found in the db".formatted(email)));
     }
 
     public List<AppUser> findAllAdmins() {
-        log.info("find all admins");
+        log.info("Find all admins");
         return appUserRepository.findByRole(UserRole.ADMIN);
+    }
+
+    public void save(AppUser appUser) {
+        log.info("Save the user in the db: " + appUser);
+        appUserRepository.save(appUser);
+    }
+
+    public List<AppUser> findAll() {
+        log.info("Find all users");
+        return appUserRepository.findAll();
     }
 }

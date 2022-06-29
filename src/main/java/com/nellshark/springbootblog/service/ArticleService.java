@@ -17,21 +17,28 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     public List<Article> findAllArticles() {
-        log.info("find all articles");
-        return articleRepository.findAll()
+        log.info("Find all articles");
+        return articleRepository
+                .findAll()
                 .stream()
                 .sorted(Comparator.comparing(Article::getDate).reversed())
                 .toList();
     }
 
     public Article findById(Long id) {
-        log.info("find article by id: " + id);
-        return articleRepository.findById(id).orElseThrow(
-                () -> new ArticleNotFoundException("Article with id = %s not found".formatted(id)));
+        log.info("Find an article by id: " + id);
+        return articleRepository
+                .findById(id)
+                .orElseThrow(() -> new ArticleNotFoundException("Article with id = %s not found".formatted(id)));
     }
 
     public void save(Article article) {
-        log.info("save article: " + article.toString());
+        log.info("Save the article in db: " + article);
         articleRepository.save(article);
+    }
+
+    public void deleteAll() {
+        log.info("Delete all articles");
+        articleRepository.deleteAll();
     }
 }

@@ -19,22 +19,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        //    @formatter:off
         http
                 .authorizeRequests()
                 .and()
                 .formLogin()
-                .loginPage("/users/sign-in")
-                .permitAll()
-                .defaultSuccessUrl("/", true)
-                .usernameParameter("email")
-                .passwordParameter("password")
+                    .loginPage("/users/sign-in")
+                    .permitAll()
+                    .defaultSuccessUrl("/", true)
+                    .usernameParameter("email")
+                    .passwordParameter("password")
                 .and()
                 .logout()
-                .logoutUrl("/users/sign-out")
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
+                    .logoutUrl("/users/sign-out")
+                    .logoutSuccessUrl("/")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID");
         return http.build();
+        //    @formatter:on
     }
 
     @Bean

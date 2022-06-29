@@ -29,8 +29,8 @@ public class AppUser implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private UserRole role;
 
     @Lob
