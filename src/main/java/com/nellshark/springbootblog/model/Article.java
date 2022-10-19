@@ -59,7 +59,6 @@ public class Article {
                 ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
                 ", date=" + date +
-                ", imageBytes=" + (imageBytes != null) +
                 '}';
     }
 }

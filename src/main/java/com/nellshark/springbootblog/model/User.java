@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.Base64Utils;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class AppUser implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
@@ -46,18 +47,18 @@ public class AppUser implements UserDetails {
         return Base64Utils.encodeToString(profilePhotoBytes);
     }
 
-    public AppUser(String email, String password, UserRole role) {
+    public User(String email, String password) {
         this.id = UUID.randomUUID();
         this.email = email;
-        this.password = password;
-        this.role = role;
+        this.password = new BCryptPasswordEncoder().encode(password);
+        this.role = UserRole.USER;
     }
 
-    public AppUser(String email, String password, UserRole role, byte[] profilePhotoBytes) {
+    public User(String email, String password, byte[] profilePhotoBytes) {
         this.id = UUID.randomUUID();
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.role = UserRole.USER;
         this.profilePhotoBytes = profilePhotoBytes;
     }
 
@@ -98,12 +99,11 @@ public class AppUser implements UserDetails {
 
     @Override
     public String toString() {
-        return "AppUser{" +
+        return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role=" + role +
-                ", profilePhotoBytes=" + (profilePhotoBytes != null) +
                 '}';
     }
 }

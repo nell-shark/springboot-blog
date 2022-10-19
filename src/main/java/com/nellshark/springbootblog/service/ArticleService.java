@@ -5,10 +5,11 @@ import com.nellshark.springbootblog.model.Article;
 import com.nellshark.springbootblog.repository.ArticleRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -16,29 +17,36 @@ import java.util.List;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    public List<Article> findAllArticles() {
+    public List<Article> getAllArticles() {
         log.info("Find all articles");
         return articleRepository
-                .findAll()
-                .stream()
-                .sorted(Comparator.comparing(Article::getDate).reversed())
-                .toList();
+                .findAll(Sort.by(Sort.Direction.DESC, "date"));
     }
 
-    public Article findById(Long id) {
+    public Article getById(Long id) {
         log.info("Find an article by id: " + id);
         return articleRepository
                 .findById(id)
                 .orElseThrow(() -> new ArticleNotFoundException("Article with id = %s not found".formatted(id)));
     }
 
-    public void save(Article article) {
+    public void saveArticle(Article article) {
         log.info("Save the article in db: " + article);
         articleRepository.save(article);
     }
 
-    public void deleteAll() {
+    public void deleteAllArticles() {
         log.info("Delete all articles");
         articleRepository.deleteAll();
+    }
+
+    public List<Article> searchArticle(String text) {
+        List<Article> articlesByTitle = articleRepository.findByTitle(text);
+        List<Article> articlesByText = articleRepository.findByText(text);
+
+        return Stream.of(articlesByTitle, articlesByText)
+                .flatMap(List::stream)
+                .distinct()
+                .toList();
     }
 }

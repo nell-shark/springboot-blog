@@ -18,7 +18,7 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     public String getArticle(@PathVariable Long id, Model model) {
-        Article article = articleService.findById(id);
+        Article article = articleService.getById(id);
         model.addAttribute("article", article);
         return "article";
     }
@@ -33,7 +33,7 @@ public class ArticleController {
     @PreAuthorize("hasAuthority('CREATE_NEW_ARTICLES')")
     public String postNewArticle(@RequestParam String title, @RequestParam String text) {
         Article article = new Article(title, text, LocalDate.now());
-        articleService.save(article);
+        articleService.saveArticle(article);
         return "redirect:/";
     }
 }

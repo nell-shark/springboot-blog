@@ -1,10 +1,10 @@
 package com.nellshark.springbootblog.controller;
 
-import com.nellshark.springbootblog.model.AppUser;
 import com.nellshark.springbootblog.model.Article;
+import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.model.UserRole;
-import com.nellshark.springbootblog.service.AppUserService;
 import com.nellshark.springbootblog.service.ArticleService;
+import com.nellshark.springbootblog.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +33,11 @@ class MainControllerTest {
     private ArticleService articleService;
 
     @MockBean
-    private AppUserService appUserService;
+    private UserService appUserService;
 
     @AfterEach
     void tearDown() {
-        articleService.deleteAll();
+        articleService.deleteAllArticles();
     }
 
     @Test
@@ -45,7 +45,7 @@ class MainControllerTest {
         String title = "title";
         LocalDate date = LocalDate.now();
         Article article = new Article(title, "text", date);
-        when(articleService.findAllArticles()).thenReturn(List.of(article));
+        when(articleService.getAllArticles()).thenReturn(List.of(article));
 
         this.mockMvc.perform(get("/"))
                 .andDo(print())
@@ -57,8 +57,9 @@ class MainControllerTest {
     @Test
     void checkAboutPageHasAdmin() throws Exception {
         String email = "test@gmail.com";
-        AppUser user = new AppUser(email, "password", UserRole.ADMIN);
-        when(appUserService.findAllAdmins()).thenReturn(List.of(user));
+        User user = new User(email, "password");
+        user.setRole(UserRole.ADMIN);
+        when(appUserService.getAllAdmins()).thenReturn(List.of(user));
 
         this.mockMvc.perform(get("/about"))
                 .andDo(print())

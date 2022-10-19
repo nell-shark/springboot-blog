@@ -1,6 +1,6 @@
 package com.nellshark.springbootblog.config;
 
-import com.nellshark.springbootblog.service.AppUserService;
+import com.nellshark.springbootblog.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @AllArgsConstructor
 public class SecurityConfig {
-    private final AppUserService appUserService;
+    private final UserService appUserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -48,7 +48,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder getPasswordEncoder() {
+    public static PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 }

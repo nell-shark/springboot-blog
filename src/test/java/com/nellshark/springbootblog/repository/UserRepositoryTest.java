@@ -1,20 +1,24 @@
 package com.nellshark.springbootblog.repository;
 
-import com.nellshark.springbootblog.model.AppUser;
+import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.model.UserRole;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.util.CollectionUtils;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @TestPropertySource("/application-test.properties")
-class AppUserRepositoryTest {
+class UserRepositoryTest {
     @Autowired
-    private AppUserRepository underTest;
+    private UserRepository underTest;
 
     @AfterEach
     void tearDown() {
@@ -24,21 +28,21 @@ class AppUserRepositoryTest {
     @Test
     void testFindUserByEmail() {
         String email = "test@gmail.com";
-        AppUser user = new AppUser(email, "password", UserRole.USER);
+        User user = new User(email, "password123");
         underTest.save(user);
+        Optional<User> optionalUser = underTest.findByEmail(email);
 
-        boolean userExists = underTest.findByEmail(email).isPresent();
-
-        assertTrue(userExists);
+        assertTrue(optionalUser.isPresent());
+        assertEquals(email, optionalUser.get().getEmail());
     }
 
     @Test
     void testFindUserByRole() {
-        AppUser user = new AppUser("test@gmail.com", "password123", UserRole.USER);
+        User user = new User("test@gmail.com", "password123");
         underTest.save(user);
+        List<User> users = underTest.findByRole(UserRole.USER);
 
-        boolean hasUser = !underTest.findByRole(UserRole.USER).isEmpty();
-
-        assertTrue(hasUser);
+        assertFalse(CollectionUtils.isEmpty(users));
+        assertEquals(UserRole.USER, users.get(0).getRole());
     }
 }

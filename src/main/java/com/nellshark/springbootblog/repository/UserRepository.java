@@ -1,6 +1,6 @@
 package com.nellshark.springbootblog.repository;
 
-import com.nellshark.springbootblog.model.AppUser;
+import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.model.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,14 +11,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
+public interface UserRepository extends JpaRepository<User, UUID> {
     @Query("SELECT user " +
-            "FROM AppUser user " +
-            "WHERE user.email = ?1")
-    Optional<AppUser> findByEmail(String email);
+            "FROM User user " +
+            "WHERE user.email = :email")
+    Optional<User> findByEmail(String email);
 
     @Query("SELECT user " +
-            "FROM AppUser user " +
-            "WHERE user.role = ?1")
-    List<AppUser> findByRole(UserRole role);
+            "FROM User user " +
+            "WHERE user.role = :role")
+    List<User> findByRole(UserRole role);
 }
