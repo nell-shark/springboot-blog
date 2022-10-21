@@ -2,8 +2,6 @@ package com.nellshark.springbootblog.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.springframework.util.Base64Utils;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,6 +13,7 @@ import java.time.LocalDate;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "title")
@@ -26,39 +25,18 @@ public class Article {
     @Column(name = "date")
     private LocalDate date;
 
-    @Lob
-    @Type(type = "org.hibernate.type.BinaryType")
     @Column(name = "image")
-    private byte[] imageBytes;
+    private String image;
 
-    @Transient
-    public String image() {
-        if (imageBytes == null || imageBytes.length == 0) {
-            return null;
-        }
-        return Base64Utils.encodeToString(imageBytes);
+    public Article(String title, String text) {
+        this.title = title;
+        this.text = text;
+        this.date = LocalDate.now();
     }
 
     public Article(String title, String text, LocalDate date) {
         this.title = title;
         this.text = text;
         this.date = date;
-    }
-
-    public Article(String title, String text, LocalDate date, byte[] imageBytes) {
-        this.title = title;
-        this.text = text;
-        this.date = date;
-        this.imageBytes = imageBytes;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", text='" + text + '\'' +
-                ", date=" + date +
-                '}';
     }
 }

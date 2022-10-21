@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -24,7 +23,7 @@ class ArticleServiceTest {
 
     @Test
     void testSearchArticleByTitleAndText() {
-        Article article = new Article("abc", "abc", LocalDate.now());
+        Article article = new Article("abc", "abc");
         when(articleRepository.findByTitle("abc")).thenReturn(List.of(article));
         when(articleRepository.findByText("abc")).thenReturn(List.of(article));
 

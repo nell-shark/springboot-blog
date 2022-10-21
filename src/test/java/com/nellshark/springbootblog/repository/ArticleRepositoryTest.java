@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,7 +27,7 @@ class ArticleRepositoryTest {
     @Test
     void testFindArticleByTitle() {
         String title = "Some title";
-        Article article = new Article(title, "", LocalDate.now());
+        Article article = new Article(title, "");
         underTest.save(article);
         List<Article> articles = underTest.findByTitle(title.split(" ")[1].toUpperCase());
 
@@ -39,7 +38,7 @@ class ArticleRepositoryTest {
     @Test
     void testFindArticleByText() {
         String text = "Some text";
-        Article article = new Article("", text, LocalDate.now());
+        Article article = new Article("", text);
         underTest.save(article);
         List<Article> articles = underTest.findByText(text.split(" ")[1].toUpperCase());
 

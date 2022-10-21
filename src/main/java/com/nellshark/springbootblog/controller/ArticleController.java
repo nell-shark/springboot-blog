@@ -8,8 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-
 @Controller
 @RequestMapping("/articles")
 @AllArgsConstructor
@@ -32,7 +30,7 @@ public class ArticleController {
     @PostMapping("/create-new-article")
     @PreAuthorize("hasAuthority('CREATE_NEW_ARTICLES')")
     public String postNewArticle(@RequestParam String title, @RequestParam String text) {
-        Article article = new Article(title, text, LocalDate.now());
+        Article article = new Article(title, text);
         articleService.saveArticle(article);
         return "redirect:/";
     }

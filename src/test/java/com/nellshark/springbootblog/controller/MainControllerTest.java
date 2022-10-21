@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -43,15 +42,13 @@ class MainControllerTest {
     @Test
     void checkMainPageHasArticle() throws Exception {
         String title = "title";
-        LocalDate date = LocalDate.now();
-        Article article = new Article(title, "text", date);
+        Article article = new Article(title, "text");
         when(articleService.getAllArticles()).thenReturn(List.of(article));
 
         this.mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(title)))
-                .andExpect(content().string(containsString(date.toString())));
+                .andExpect(content().string(containsString(title)));
     }
 
     @Test
