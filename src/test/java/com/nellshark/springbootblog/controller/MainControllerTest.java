@@ -45,7 +45,7 @@ class MainControllerTest {
         Article article = new Article(title, "text");
         when(articleService.getAllArticles()).thenReturn(List.of(article));
 
-        this.mockMvc.perform(get("/"))
+        mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(title)));
@@ -58,9 +58,20 @@ class MainControllerTest {
         user.setRole(UserRole.ADMIN);
         when(appUserService.getAllAdmins()).thenReturn(List.of(user));
 
-        this.mockMvc.perform(get("/about"))
+        mockMvc.perform(get("/about"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(email)));
+    }
+
+    @Test
+    void searchArticles() throws Exception {
+        String text = "text";
+        when(articleService.searchArticle(text)).thenReturn(List.of(new Article("Title", text)));
+
+        mockMvc.perform(get("/").param("search", text))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(text)));
     }
 }

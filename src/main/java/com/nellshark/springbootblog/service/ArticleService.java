@@ -30,6 +30,14 @@ public class ArticleService {
                 .orElseThrow(() -> new ArticleNotFoundException("Article with id = %s not found".formatted(id)));
     }
 
+    public List<Article> searchArticle(String text) {
+        log.info("Search article (%s)".formatted(text));
+        return Stream.of(articleRepository.findByTitle(text), articleRepository.findByText(text))
+                .flatMap(List::stream)
+                .distinct()
+                .toList();
+    }
+
     public void saveArticle(Article article) {
         log.info("Save the article in db: " + article);
         articleRepository.save(article);
@@ -38,15 +46,5 @@ public class ArticleService {
     public void deleteAllArticles() {
         log.info("Delete all articles");
         articleRepository.deleteAll();
-    }
-
-    public List<Article> searchArticle(String text) {
-        List<Article> articlesByTitle = articleRepository.findByTitle(text);
-        List<Article> articlesByText = articleRepository.findByText(text);
-
-        return Stream.of(articlesByTitle, articlesByText)
-                .flatMap(List::stream)
-                .distinct()
-                .toList();
     }
 }
