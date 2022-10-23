@@ -20,7 +20,7 @@ public class ArticleService {
     public List<Article> getAllArticles() {
         log.info("Find all articles");
         return articleRepository
-                .findAll(Sort.by(Sort.Direction.DESC, "date"));
+                .findAll(Sort.by(Sort.Direction.DESC, "published"));
     }
 
     public Article getById(Long id) {

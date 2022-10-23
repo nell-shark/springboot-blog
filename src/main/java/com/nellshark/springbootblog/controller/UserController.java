@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/users")
 @AllArgsConstructor
-public class AppUserController {
+public class UserController {
     private final UserService appUserService;
 
     @GetMapping("/sign-up")

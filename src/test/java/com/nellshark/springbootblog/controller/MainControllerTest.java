@@ -1,8 +1,6 @@
 package com.nellshark.springbootblog.controller;
 
 import com.nellshark.springbootblog.model.Article;
-import com.nellshark.springbootblog.model.User;
-import com.nellshark.springbootblog.model.UserRole;
 import com.nellshark.springbootblog.service.ArticleService;
 import com.nellshark.springbootblog.service.UserService;
 import org.junit.jupiter.api.AfterEach;
@@ -51,18 +49,18 @@ class MainControllerTest {
                 .andExpect(content().string(containsString(title)));
     }
 
-    @Test
-    void checkAboutPageHasAdmin() throws Exception {
-        String email = "test@gmail.com";
-        User user = new User(email, "password");
-        user.setRole(UserRole.ADMIN);
-        when(appUserService.getAllAdmins()).thenReturn(List.of(user));
-
-        mockMvc.perform(get("/about"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString(email)));
-    }
+//    @Test
+//    void checkAboutPageHasAdmin() throws Exception {
+//        String email = "test@gmail.com";
+//        User user = new User(email, "password");
+//        user.setRole(UserRole.ADMIN);
+//        when(appUserService.getAllAdmins()).thenReturn(List.of(user));
+//
+//        mockMvc.perform(get("/about"))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(content().string(containsString(email)));
+//    }
 
     @Test
     void searchArticles() throws Exception {

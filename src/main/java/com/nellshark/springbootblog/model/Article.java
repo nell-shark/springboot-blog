@@ -22,8 +22,8 @@ public class Article {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(name = "published")
+    private LocalDate published;
 
     @Column(name = "image")
     private String image;
@@ -31,12 +31,12 @@ public class Article {
     public Article(String title, String text) {
         this.title = title;
         this.text = text;
-        this.date = LocalDate.now();
+        this.published = LocalDate.now();
     }
 
     public Article(String title, String text, LocalDate date) {
         this.title = title;
         this.text = text;
-        this.date = date;
+        this.published = date;
     }
 }
