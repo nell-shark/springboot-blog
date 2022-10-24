@@ -1,0 +1,17 @@
+.card-animation {
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
+
+.card-animation:hover {
+  -webkit-transform: scale(1.05);
+  transform: scale(1.05);
+}
+
+.card img {
+  height: 225px;
+  max-width: 100%;
+  object-fit: cover;
+}

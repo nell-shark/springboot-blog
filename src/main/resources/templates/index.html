@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Blog</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css"/>
+
     <link rel="shortcut icon" type="image/png" th:href="@{favicon.png}"/>
 </head>
 <body>
@@ -25,9 +27,9 @@
             <div th:each="article : ${articles}">
                 <div class="col">
                     <a th:href="@{'/articles/'+${article.id}}" class="nav-link">
-                        <div class="card mb-4">
+                        <div class="card mb-4 card-animation">
                             <img class="card-img-top" th:src="@{'storage/articles/'+${article.image}}"
-                                 alt="${article.image}" style="height:225px; max-width: 100%; object-fit: cover;">
+                                 alt="${article.image}">
                             <div class="card-body">
                                 <p class="card-text" th:text="${article.title}"></p>
                             </div>
