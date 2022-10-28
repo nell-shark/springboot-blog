@@ -9,7 +9,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -30,12 +29,16 @@ public class ArticleService {
                 .orElseThrow(() -> new ArticleNotFoundException("Article with id = %s not found".formatted(id)));
     }
 
-    public List<Article> searchArticle(String text) {
-        log.info("Search article (%s)".formatted(text));
-        return Stream.of(articleRepository.findByTitle(text), articleRepository.findByText(text))
-                .flatMap(List::stream)
-                .distinct()
-                .toList();
+    public Article getByTitle(String title) {
+        log.info("Find an article by title: " + title);
+        return articleRepository
+                .findByTitle(title)
+                .orElseThrow(() -> new ArticleNotFoundException("Article with title = %s not found".formatted(title)));
+    }
+
+    public List<Article> searchArticle(String search) {
+        log.info("Search article (%s)".formatted(search));
+        return articleRepository.search(search);
     }
 
     public void saveArticle(Article article) {

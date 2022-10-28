@@ -11,7 +11,7 @@
 	<groupId>com.nellshark</groupId>
 	<artifactId>springbootblog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>springbootblog</name>
+	<name>spring-boot-blog</name>
 
 	<properties>
 		<java.version>18</java.version>

@@ -39,4 +39,8 @@ public class Article {
         this.text = text;
         this.published = date;
     }
+
+    public String getTitleLink() {
+        return String.join("-", getTitle().split(" "));
+    }
 }

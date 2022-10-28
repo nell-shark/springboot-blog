@@ -6,16 +6,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query("SELECT article " +
             "FROM Article article " +
-            "WHERE LOWER(article.title) LIKE LOWER(CONCAT('%',:title, '%')) ")
-    List<Article> findByTitle(String title);
+            "WHERE article.title = :title")
+    Optional<Article> findByTitle(String title);
 
     @Query("SELECT article " +
             "FROM Article article " +
-            "WHERE LOWER(article.text) LIKE LOWER(CONCAT('%',:text, '%')) ")
-    List<Article> findByText(String text);
+            "WHERE LOWER(article.title) LIKE LOWER(CONCAT('%',:search, '%')) " +
+            "OR LOWER(article.text) LIKE LOWER(CONCAT('%',:search, '%')) ")
+    List<Article> search(String search);
 }

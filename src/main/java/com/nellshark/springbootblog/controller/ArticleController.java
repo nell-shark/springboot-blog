@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
     private final ArticleService articleService;
 
-    @GetMapping("/{id}")
-    public String getArticle(@PathVariable Long id, Model model) {
-        Article article = articleService.getById(id);
+    @GetMapping("/{title}")
+    public String getArticle(@ModelAttribute Article article, Model model) {
         model.addAttribute("article", article);
         return "article";
     }

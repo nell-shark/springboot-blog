@@ -26,7 +26,7 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
             <div th:each="article : ${articles}">
                 <div class="col">
-                    <a th:href="@{'/articles/'+${article.id}}" class="nav-link">
+                    <a th:href="@{'/articles/'+${article.getTitleLink()}}" th:object="${article}" class="nav-link">
                         <div class="card mb-4 card-animation">
                             <img class="card-img-top" th:src="@{'storage/articles/'+${article.image}}"
                                  alt="${article.image}">
