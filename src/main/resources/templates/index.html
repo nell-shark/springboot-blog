@@ -1,16 +1,13 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Blog</title>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" type="text/css"/>
-    <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css"/>
 
-    <link rel="shortcut icon" type="image/png" th:href="@{favicon.png}"/>
+<head>
+    <div th:replace="blocks/header :: header"></div>
+    <title>Blog</title>
 </head>
+
 <body>
-<div th:insert="block/header :: header"></div>
+<div th:insert="blocks/hat :: hat" th:remove="tag"></div>
 
 <main>
     <section class="py-5 text-center container">
@@ -41,6 +38,6 @@
     </section>
 </main>
 
-<div th:insert="block/footer :: footer"></div>
+<div th:insert="blocks/footer :: footer" th:remove="tag"></div>
 </body>
 </html>
