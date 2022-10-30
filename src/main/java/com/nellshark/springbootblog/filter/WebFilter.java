@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Configuration
-public class HtmlFilter implements Filter {
+public class WebFilter implements Filter {
     private FilterConfig config;
 
     public void init(FilterConfig config) {

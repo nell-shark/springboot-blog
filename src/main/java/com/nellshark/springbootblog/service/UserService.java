@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -23,16 +22,21 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return getUserByEmail(email);
+    }
+
+    public User getById(Long id) {
+        log.info("Find a user by id: " + id);
+        return userRepository
+                .findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User with id='%s' wasn't found".formatted(id)));
+    }
+
+    public User getUserByEmail(String email) {
         log.info("Find a user by email: " + email);
         return userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Email '%s' was not found in the db".formatted(email)));
-    }
-
-    public User getById(UUID id) {
-        return userRepository
-                .findById(id)
-                .orElseThrow(() -> new Error("error"));
+                .orElseThrow(() -> new UsernameNotFoundException("Email '%s' was not found".formatted(email)));
     }
 
     public List<User> getAllUsers() {
