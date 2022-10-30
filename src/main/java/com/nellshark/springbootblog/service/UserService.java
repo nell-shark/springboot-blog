@@ -46,12 +46,8 @@ public class UserService implements UserDetailsService {
     }
 
     public void saveUser(User user) {
-        User appUser = new User(
-                user.getEmail(),
-                passwordEncoder.encode(user.getPassword()));
-
-        log.info("Save the user in the db: " + appUser);
-
-        userRepository.save(appUser);
+        log.info("Save the user in the db: " + user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 }

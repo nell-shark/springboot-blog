@@ -26,6 +26,7 @@
         <ul class="nav justify-content-center">
             <li class="nav-item"><a href="/users/sign-in" class="nav-link active">or sign-in</a></li>
         </ul>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     </form>
 </main>
 </body>

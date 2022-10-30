@@ -10,7 +10,7 @@
 <body class="sign">
 
 <main class="form-sign w-100 m-auto">
-    <form class="form-signin" method="post" action="/users/sign-in">
+    <form class="form-sign" method="post" action="/users/sign-in">
         <img class="mb-4" th:src="@{/images/favicon.png}" width="200" height="200">
         <h1 class="h3 mb-3 fw-normal">Please Sign in</h1>
 
@@ -32,6 +32,7 @@
         <ul class="nav justify-content-center">
             <li class="nav-item"><a href="/users/sign-up" class="nav-link active">or sign-up</a></li>
         </ul>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     </form>
 </main>
 </body>

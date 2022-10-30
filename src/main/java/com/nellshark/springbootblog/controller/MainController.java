@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -32,9 +33,9 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping(value = "/about", method = RequestMethod.GET)
-    public String about(Model model) {
+    @GetMapping("/contact-us")
+    public String contactUs(Model model) {
         model.addAttribute("admins", appUserService.getAllAdmins());
-        return "about";
+        return "contact-us";
     }
 }

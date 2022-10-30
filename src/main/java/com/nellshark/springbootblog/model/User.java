@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Optional;
 
 @Data
 @NoArgsConstructor
@@ -35,6 +36,10 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.role = UserRole.USER;
+    }
+
+    public Optional<String> getImage() {
+        return Optional.ofNullable(image);
     }
 
     @Override

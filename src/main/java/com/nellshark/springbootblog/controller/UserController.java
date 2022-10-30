@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/users")
 @AllArgsConstructor
 public class UserController {
-    private final UserService appUserService;
+    private final UserService userService;
 
     @GetMapping("/sign-up")
     public String signUp() {
@@ -29,7 +29,7 @@ public class UserController {
 
     @PostMapping("/sign-up")
     public String createNewUser(@RequestParam String email, @RequestParam String password) {
-        appUserService.saveUser(new User(email, password));
+        userService.saveUser(new User(email, password));
         return "redirect:/";
     }
 

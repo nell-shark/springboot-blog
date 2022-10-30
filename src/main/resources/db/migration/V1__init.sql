@@ -22,3 +22,12 @@ INSERT INTO articles (title, text, published, image) VALUES
     ('Xi Jinping''s party is just getting started', '', '2022-10-23', 'img2.webp'),
     ('How a magician-mathematician revealed a casino loophole', '', '2022-10-24', 'img3.webp'),
     ('A fish that sparked a national obsession', '', '2022-10-25', 'img4.webp');
+
+
+-- password = password123
+INSERT INTO users (email, password, role) VALUES
+    ('user1@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'USER'),
+    ('user2@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'USER'),
+    ('user3@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'USER'),
+    ('admin1@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'ADMIN'),
+    ('admin2@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'ADMIN');
