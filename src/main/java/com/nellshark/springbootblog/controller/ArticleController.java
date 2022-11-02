@@ -17,9 +17,9 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping("/{title}")
-    public String getArticle(@ModelAttribute Article article, Model model, @AuthenticationPrincipal User user) {
+    public String getArticle(@PathVariable String title, Model model, @AuthenticationPrincipal User user) {
         if (user != null) model.addAttribute("user", user);
-        model.addAttribute("article", article);
+        model.addAttribute("article", articleService.getByTitle(title));
         return "article";
     }
 
@@ -33,8 +33,7 @@ public class ArticleController {
     @PostMapping("/create-new-article")
     @PreAuthorize("hasAuthority('CREATE_NEW_ARTICLES')")
     public String postNewArticle(@RequestParam String title, @RequestParam String text) {
-        Article article = new Article(title, text);
-        articleService.saveArticle(article);
+        articleService.saveArticle(new Article(title, text));
         return "redirect:/";
     }
 }

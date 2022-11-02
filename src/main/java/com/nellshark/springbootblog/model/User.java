@@ -35,7 +35,7 @@ public class User implements UserDetails {
     public User(String email, String password) {
         this.email = email;
         this.password = password;
-        this.role = UserRole.USER;
+        this.role = UserRole.ROLE_USER;
     }
 
     public Optional<String> getImage() {

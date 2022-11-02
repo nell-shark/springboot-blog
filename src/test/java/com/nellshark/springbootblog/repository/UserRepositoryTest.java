@@ -40,9 +40,9 @@ class UserRepositoryTest {
     void testFindUserByRole() {
         User user = new User("test@gmail.com", "password123");
         underTest.save(user);
-        List<User> users = underTest.findByRole(UserRole.USER);
+        List<User> users = underTest.findByRole(UserRole.ROLE_USER);
 
         assertFalse(CollectionUtils.isEmpty(users));
-        assertEquals(UserRole.USER, users.get(0).getRole());
+        assertEquals(UserRole.ROLE_USER, users.get(0).getRole());
     }
 }

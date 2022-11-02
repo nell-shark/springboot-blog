@@ -25,7 +25,7 @@
                 <div class="col">
                     <a th:href="@{'/articles/'+${article.getTitleLink()}}" th:object="${article}" class="nav-link">
                         <div class="card mb-4 card-animation">
-                            <img class="card-img-top" th:src="@{'storage/articles/'+${article.image}}"
+                            <img class="card-img-top" th:src="@{'/storage/articles/'+${article.image}}"
                                  alt="${article.image}">
                             <div class="card-body">
                                 <p class="card-text" th:text="${article.title}"></p>

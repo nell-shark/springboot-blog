@@ -17,15 +17,12 @@
                 <div sec:authorize="isAnonymous()" class="text-end">
                     <a href="/users/sign-in" type="button" class="btn btn-outline-light me-2">Sign-In</a>
                     <a href="/users/sign-up" type="button" class="btn btn-warning">Sign-Up</a>
-
-
                 </div>
 
                 <div sec:authorize="isAuthenticated()" class="dropdown text-end">
-
                     <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
                        aria-expanded="false">
-                        <img th:src="@{'images/'+${user.getImage().orElse('user.svg')}}" alt="user.svg" width="32"
+                        <img th:src="@{'/images/'+${user.getImage().orElse('user.svg')}}" alt="user.svg" width="32"
                              height="32" class="rounded-circle">
                     </a>
                     <ul class="dropdown-menu text-small" style="">
@@ -33,7 +30,11 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
+                        <li sec:authorize="hasRole('ROLE_ADMIN')"><a class="dropdown-item" href="#">Users</a></li>
+                        <li sec:authorize="hasAuthority('CREATE_NEW_ARTICLES')"><a class="dropdown-item" href="#">Create
+                            article</a></li>
                         <li><a class="dropdown-item" href="/users/sign-out">Sign out</a></li>
+
                     </ul>
                 </div>
             </div>

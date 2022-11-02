@@ -41,9 +41,7 @@ public class UserController {
     @GetMapping("/sign-out")
     public String signOut(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
+        if (auth != null) new SecurityContextLogoutHandler().logout(request, response, auth);
         return "redirect:/";
     }
 }

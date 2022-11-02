@@ -1,5 +1,6 @@
 package com.nellshark.springbootblog.service;
 
+import com.nellshark.springbootblog.exception.UserNotFoundException;
 import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.model.UserRole;
 import com.nellshark.springbootblog.repository.UserRepository;
@@ -7,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
         return getUserByEmail(email);
     }
 
@@ -29,14 +29,14 @@ public class UserService implements UserDetailsService {
         log.info("Find a user by id: " + id);
         return userRepository
                 .findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User with id='%s' wasn't found".formatted(id)));
+                .orElseThrow(() -> new UserNotFoundException("User with id='%s' wasn't found".formatted(id)));
     }
 
     public User getUserByEmail(String email) {
         log.info("Find a user by email: " + email);
         return userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Email '%s' was not found".formatted(email)));
+                .orElseThrow(() -> new UserNotFoundException("User with email='%s' wasn't found".formatted(email)));
     }
 
     public List<User> getAllUsers() {
@@ -46,7 +46,7 @@ public class UserService implements UserDetailsService {
 
     public List<User> getAllAdmins() {
         log.info("Find all admins");
-        return userRepository.findByRole(UserRole.ADMIN);
+        return userRepository.findByRole(UserRole.ROLE_ADMIN);
     }
 
     public void saveUser(User user) {

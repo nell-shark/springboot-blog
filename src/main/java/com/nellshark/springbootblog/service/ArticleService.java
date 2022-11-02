@@ -26,14 +26,14 @@ public class ArticleService {
         log.info("Find an article by id: " + id);
         return articleRepository
                 .findById(id)
-                .orElseThrow(() -> new ArticleNotFoundException("Article with id = %s not found".formatted(id)));
+                .orElseThrow(() -> new ArticleNotFoundException("Article with id=%s not found".formatted(id)));
     }
 
     public Article getByTitle(String title) {
         log.info("Find an article by title: " + title);
         return articleRepository
                 .findByTitle(title)
-                .orElseThrow(() -> new ArticleNotFoundException("Article with title = %s not found".formatted(title)));
+                .orElseThrow(() -> new ArticleNotFoundException("Article with title=%s not found".formatted(title)));
     }
 
     public List<Article> searchArticle(String search) {
