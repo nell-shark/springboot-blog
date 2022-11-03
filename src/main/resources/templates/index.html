@@ -10,7 +10,7 @@
 <div th:insert="blocks/hat :: hat" th:remove="tag"></div>
 
 <main>
-    <section class="py-5 text-center container">
+    <section th:if="${search == null || search.isEmpty()}" class="py-5 text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1 class="fw-light">Blog</h1>
@@ -19,9 +19,19 @@
         </div>
     </section>
 
+    <section th:unless="${search == null || search.isEmpty()}" class="py-5 text-center container">
+        <form action="/" role="search">
+            <div class="input-group mb-3">
+                <input type="search" class="form-control" name="search" id="search" th:value="${search}"
+                       placeholder="Search">
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
+        </form>
+    </section>
+
     <section class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
-            <div th:each="article : ${articles}">
+            <div th:each="article : ${articles}" th:remove="tag">
                 <div class="col">
                     <a th:href="@{'/articles/'+${article.getTitleLink()}}" th:object="${article}" class="nav-link">
                         <div class="card mb-4 card-animation">

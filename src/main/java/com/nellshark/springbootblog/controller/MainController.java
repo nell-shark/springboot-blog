@@ -32,6 +32,7 @@ public class MainController {
                 : articleService.searchArticle(search);
 
         if (user != null) model.addAttribute("user", user);
+        model.addAttribute("search", search);
         model.addAttribute("articles", articles);
         return "index";
     }
