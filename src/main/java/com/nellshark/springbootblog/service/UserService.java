@@ -49,9 +49,9 @@ public class UserService implements UserDetailsService {
         return userRepository.findByRole(UserRole.ROLE_ADMIN);
     }
 
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         log.info("Save the user in the db: " + user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 }
