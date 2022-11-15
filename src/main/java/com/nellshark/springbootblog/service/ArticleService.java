@@ -46,6 +46,10 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
+    public Long getNextSeriesId() {
+        return articleRepository.getMaxId() + 1L;
+    }
+
     public void deleteAllArticles() {
         log.info("Delete all articles");
         articleRepository.deleteAll();

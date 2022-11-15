@@ -9,13 +9,11 @@
 
 <div class="container py-4">
     <div class="p-5 mb-4 bg-light rounded-3">
-        <div class="container-fluid py-5">
-            <img class="rounded" th:src="@{'data:image/jpeg;base64,'+${article.image}}"/>
-            <h1 class="display-5 fw-bold" th:text="${article.title}"></h1>
-            <p class="col-md-8 fs-4" th:text="${article.text}"></p>
-        </div>
+        <div th:remove="tag" th:utext="${article.text}"></div>
     </div>
 </div>
+
+<!--TODO ADD COMMENTS-->
 
 <div th:insert="blocks/footer :: footer"></div>
 </body>

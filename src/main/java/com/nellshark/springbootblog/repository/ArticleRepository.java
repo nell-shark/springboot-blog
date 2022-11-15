@@ -20,4 +20,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             "WHERE LOWER(article.title) LIKE LOWER(CONCAT('%',:search, '%')) " +
             "OR LOWER(article.text) LIKE LOWER(CONCAT('%',:search, '%')) ")
     List<Article> search(String search);
+
+    @Query("SELECT coalesce(max(id), 0) FROM Article article")
+    Long getMaxId();
 }

@@ -31,10 +31,10 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li sec:authorize="hasRole('ROLE_ADMIN')"><a class="dropdown-item" href="#">Users</a></li>
-                        <li sec:authorize="hasAuthority('CREATE_NEW_ARTICLES')"><a class="dropdown-item" href="#">Create
+                        <li sec:authorize="hasAuthority('CREATE_NEW_ARTICLES')"><a class="dropdown-item"
+                                                                                   href="/articles/create-new-article">Create
                             article</a></li>
                         <li><a class="dropdown-item" href="/users/sign-out">Sign out</a></li>
-
                     </ul>
                 </div>
             </div>

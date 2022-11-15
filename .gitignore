@@ -33,3 +33,5 @@ build/
 .vscode/
 
 /logs/
+/images/articles/[!1-4]/
+

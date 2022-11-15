@@ -26,7 +26,9 @@ public class MainController {
     private final UserService userService;
 
     @RequestMapping(value = {"/", "/index", "/main", "/home"}, method = RequestMethod.GET)
-    public String index(@Param("search") String search, Model model, @AuthenticationPrincipal User user) {
+    public String index(@Param("search") String search,
+                        Model model,
+                        @AuthenticationPrincipal User user) {
         List<Article> articles = StringUtils.isEmpty(search)
                 ? articleService.getAllArticles()
                 : articleService.searchArticle(search);

@@ -28,14 +28,16 @@ public class Article {
     @Column(name = "image")
     private String image;
 
-    public Article(String title, String text) {
+    public Article(String title, String image, String text) {
         this.title = title;
+        this.image = image;
         this.text = text;
         this.published = LocalDate.now();
     }
 
-    public Article(String title, String text, LocalDate date) {
+    public Article(String title, String image, String text, LocalDate date) {
         this.title = title;
+        this.image = image;
         this.text = text;
         this.published = date;
     }

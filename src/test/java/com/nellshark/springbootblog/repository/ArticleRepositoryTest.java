@@ -1,6 +1,7 @@
 package com.nellshark.springbootblog.repository;
 
 import com.nellshark.springbootblog.model.Article;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -26,38 +27,28 @@ class ArticleRepositoryTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "Search By Title, search",
-            "Search By Title, by",
-            "Search By Title, title",
-            "search by title, SEARCH BY TITLE",
-            "SEARCH BY TITLE, search by title"
-    })
-    void testSearchArticlesByTitle(String title, String search) {
-        Article article = new Article(title, "");
-        underTest.save(article);
-
-        List<Article> searchByTitle = underTest.search(search);
-
-        assertFalse(CollectionUtils.isEmpty(searchByTitle));
-        assertEquals(title, searchByTitle.get(0).getTitle());
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "Search By Text, search",
-            "Search By Text, by",
-            "Search By Text, text",
-            "search by text, SEARCH BY TEXT",
-            "SEARCH BY TEXT, search by text"
-    })
-    void testSearchArticlesByText(String text, String search) {
-        Article article = new Article("", text);
+    @CsvSource(value = {
+            "Search By Title, null, search",
+            "Search By Title, null ,by",
+            "Search By Title, null ,title",
+            "search by title, null ,SEARCH BY TITLE",
+            "SEARCH BY TITLE, null ,search by title",
+            "null, Search By Text, search",
+            "null, Search By Text, by",
+            "null, Search By Text, text",
+            "null, search by text, SEARCH BY TEXT",
+            "null, SEARCH BY TEXT, search by text"
+    }, nullValues = {"null"})
+    void testSearchArticles(String title, String text, String search) {
+        System.out.println(StringUtils.isEmpty(text));
+        Article article = new Article(title, null, text);
         underTest.save(article);
 
         List<Article> searchByText = underTest.search(search);
 
         assertFalse(CollectionUtils.isEmpty(searchByText));
+
+        assertEquals(title, searchByText.get(0).getTitle());
         assertEquals(text, searchByText.get(0).getText());
     }
 }
