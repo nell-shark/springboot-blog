@@ -27,7 +27,8 @@ public class ArticleController {
     @GetMapping("/{title}")
     public String getArticle(@PathVariable String title, Model model, @AuthenticationPrincipal User user) {
         if (user != null) model.addAttribute("user", user);
-        model.addAttribute("article", articleService.getByTitle(title));
+        Article articleByTitle = articleService.getByTitle(String.join(" ", title.split("-")));
+        model.addAttribute("article", articleByTitle);
         return "article";
     }
 

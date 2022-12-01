@@ -45,4 +45,5 @@ public class Article {
     public String getTitleLink() {
         return String.join("-", getTitle().split(" "));
     }
+
 }

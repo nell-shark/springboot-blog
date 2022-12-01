@@ -9,13 +9,13 @@ import java.io.File;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    public static final String IMAGES_LOCATION = System.getProperty("user.dir") + File.separator
-            + "images" + File.separator;
+    public static final String STORAGE = System.getProperty("user.dir") + File.separator
+            + "storage" + File.separator;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
-                .addResourceHandler("/images/**")
-                .addResourceLocations("file:" + IMAGES_LOCATION);
+                .addResourceHandler("/storage/**")
+                .addResourceLocations("file:" + STORAGE);
     }
 }

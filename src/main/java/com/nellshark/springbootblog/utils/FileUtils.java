@@ -14,7 +14,7 @@ public class FileUtils {
     public static boolean saveMultipartFileToStorage(MultipartFile file, String folderName) {
         try {
             log.info("Save MultipartFile to the local storage: " + file.getOriginalFilename());
-            String folderPath = WebConfig.IMAGES_LOCATION + File.separator + folderName;
+            String folderPath = WebConfig.STORAGE + File.separator + folderName;
             Files.createDirectories(Paths.get(folderPath));
             file.transferTo(new File(folderPath + File.separator + file.getOriginalFilename()));
             return true;
