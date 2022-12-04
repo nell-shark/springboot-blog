@@ -19,8 +19,8 @@ public class Article {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "text")
-    private String text;
+    @Column(name = "content")
+    private String content;
 
     @Column(name = "published")
     private LocalDate published;
@@ -28,22 +28,21 @@ public class Article {
     @Column(name = "image")
     private String image;
 
-    public Article(String title, String image, String text) {
+    public Article(String title, String image, String content) {
         this.title = title;
         this.image = image;
-        this.text = text;
+        this.content = content;
         this.published = LocalDate.now();
     }
 
-    public Article(String title, String image, String text, LocalDate date) {
+    public Article(String title, String image, String content, LocalDate date) {
         this.title = title;
         this.image = image;
-        this.text = text;
+        this.content = content;
         this.published = date;
     }
 
     public String getTitleLink() {
         return String.join("-", getTitle().split(" "));
     }
-
 }

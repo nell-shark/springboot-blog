@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class UserController {
     private final UserService userService;
-//    private final AuthenticationManager authenticationManager;
 
     @GetMapping("/sign-up")
     public String signUp() {

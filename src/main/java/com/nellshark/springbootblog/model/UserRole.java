@@ -6,10 +6,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum UserRole {
-    ROLE_USER(Set.of(Authority.READ_ARTICLES)),
+    ROLE_USER(Set.of(Authority.WRITE_COMMENTS)),
 
     ROLE_ADMIN(Set.of(
-            Authority.READ_ARTICLES,
+            Authority.WRITE_COMMENTS,
             Authority.CREATE_NEW_ARTICLES,
             Authority.EDIT_ARTICLES,
             Authority.DELETE_ARTICLES));

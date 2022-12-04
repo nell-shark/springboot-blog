@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <div th:replace="blocks/header :: header"></div>
+    <div th:replace="blocks/head :: head"></div>
     <title>Blog</title>
 </head>
 
 <body>
-<div th:insert="blocks/hat :: hat" th:remove="tag"></div>
+<div th:insert="blocks/header :: header" th:remove="tag"></div>
 
 <main>
     <section th:if="${search == null || search.isEmpty()}" class="py-5 text-center container">
@@ -33,7 +33,7 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
             <div th:each="article : ${articles}" th:remove="tag">
                 <div class="col">
-                    <a th:href="@{'/articles/'+${article.getTitleLink()}}" th:object="${article}" class="nav-link">
+                    <a th:href="@{'/articles/'+${article.getTitleLink()}}" class="nav-link">
                         <div class="card mb-4 card-animation">
                             <img class="card-img-top"
                                  th:src="@{'/storage/articles/'+${article.id}+'/'+${article.image}}"

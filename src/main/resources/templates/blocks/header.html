@@ -1,9 +1,44 @@
-<th:block th:fragment="header" xmlns:th="http://www.thymeleaf.org">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<th:block th:fragment="header" xmlns:th="http://www.thymeleaf.org"
+          xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <header class="p-3 bg-dark text-white">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
+                    <li><a href="/contact-us" class="nav-link px-2 text-white">Contact us</a></li>
+                </ul>
 
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" type="text/css"/>
-    <link rel="stylesheet" th:href="@{/css/styles.min.css}" type="text/css"/>
+                <form action="/" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                    <input type="search" name="search" id="search" th:value="${search}"
+                           class="form-control form-control-dark text-white bg-dark" placeholder="Search..."
+                           aria-label="Search" required>
+                </form>
 
-    <link rel="shortcut icon" type="image/png" th:href="@{/images/favicon.png}"/>
+                <div sec:authorize="isAnonymous()" class="text-end">
+                    <a href="/users/sign-in" type="button" class="btn btn-outline-light me-2">Sign-In</a>
+                    <a href="/users/sign-up" type="button" class="btn btn-warning">Sign-Up</a>
+                </div>
+
+                <div sec:authorize="isAuthenticated()" class="dropdown text-end">
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        <img th:src="@{'/images/' + ${user.getImage().orElse('user.svg')}}" alt="user.svg" width="32"
+                             height="32" class="rounded-circle">
+                    </a>
+                    <ul class="dropdown-menu text-small" style="">
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li sec:authorize="hasRole('ROLE_ADMIN')"><a class="dropdown-item" href="#">Users</a></li>
+                        <li sec:authorize="hasAuthority('CREATE_NEW_ARTICLES')"><a class="dropdown-item"
+                                                                                   href="/articles/create-new-article">Create
+                            article</a></li>
+                        <li><a class="dropdown-item" href="/users/sign-out">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
 </th:block>

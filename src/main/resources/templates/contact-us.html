@@ -1,19 +1,19 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="blocks/header :: header"></div>
+    <div th:replace="blocks/head :: head"></div>
     <title>Contact us</title>
 </head>
 
 <body>
-<div th:insert="blocks/hat :: hat" th:remove="tag"></div>
+<div th:insert="blocks/header :: header" th:remove="tag"></div>
 
 <main>
     <div th:each="admin : ${admins}" class="mt-3">
         <a th:href="@{'mailto: '+${admin.getEmail()}}" class="text-primary nav-link">
             <div class="d-flex flex-column justify-content-center align-items-center">
                 <img width="140" height="140" class="rounded-circle"
-                     th:src="${admin.getImage().orElse('images/user.svg')}" alt="user.svg"/>
+                     th:src="${admin.getImage().orElse('/images/user.svg')}" alt="user.svg"/>
                 <h2 class="fw-light mb-5" th:text="${admin.email}"></h2>
             </div>
         </a>
