@@ -1,8 +1,8 @@
 package com.nellshark.springbootblog.model;
 
-public enum Authority {
-    CREATE_NEW_ARTICLES,
+public enum UserAuthority {
+    CREATE_ARTICLES,
     EDIT_ARTICLES,
     DELETE_ARTICLES,
-    WRITE_COMMENTS
+    WRITE_COMMENTS,
 }

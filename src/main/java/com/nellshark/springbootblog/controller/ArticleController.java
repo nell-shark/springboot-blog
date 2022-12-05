@@ -28,6 +28,8 @@ public class ArticleController {
     private final ArticleService articleService;
     private final CommentService commentService;
 
+    private final String TEMPLATES_FOLDER = "articles/";
+
     @GetMapping("/{title}")
     public String getArticle(@PathVariable String title,
                              Model model,
@@ -37,30 +39,30 @@ public class ArticleController {
         List<Comment> comments = commentService.getAllCommentsByArticle(articleByTitle);
         model.addAttribute("article", articleByTitle);
         model.addAttribute("comments", comments);
-        return "article";
+        return TEMPLATES_FOLDER + "article";
     }
 
     @GetMapping("/create-new-article")
-    @PreAuthorize("hasAuthority('CREATE_NEW_ARTICLES')")
-    public String createNewArticle(Model model,
-                                   @AuthenticationPrincipal User user) {
+    @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
+    public String createArticle(Model model,
+                                @AuthenticationPrincipal User user) {
         model.addAttribute("user", user);
-        return "create-new-article";
+        return TEMPLATES_FOLDER + "create-article";
     }
 
     @PostMapping("/create-new-article")
-    @PreAuthorize("hasAuthority('CREATE_NEW_ARTICLES')")
-    public String postNewArticle(@RequestParam("title") String title,
-                                 @RequestParam("image") MultipartFile file,
-                                 @RequestParam("text") String text) {
+    @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
+    public String postArticle(@RequestParam("title") String title,
+                              @RequestParam("image") MultipartFile file,
+                              @RequestParam("text") String text) {
         String folderName = "articles" + File.separator + articleService.getNextSeriesId().toString();
         FileUtils.saveMultipartFileToStorage(file, folderName);
         articleService.saveArticle(new Article(title, file.getOriginalFilename(), text));
-        return "redirect:/";
+        return TEMPLATES_FOLDER + "redirect:/";
     }
 
     @PostMapping("/upload-image")
-    @PreAuthorize("hasAuthority('CREATE_NEW_ARTICLES')")
+    @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
     public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
         boolean isFileSaved = FileUtils.saveMultipartFileToStorage(file, articleService.getNextSeriesId().toString());
 

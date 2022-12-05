@@ -2,15 +2,18 @@ package com.nellshark.springbootblog.controller;
 
 
 import com.nellshark.springbootblog.model.User;
+import com.nellshark.springbootblog.model.UserRole;
 import com.nellshark.springbootblog.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +29,12 @@ import javax.servlet.http.HttpServletResponse;
 public class UserController {
     private final UserService userService;
 
+    private final String TEMPLATES_FOLDER = "users/";
+
+
     @GetMapping("/sign-up")
     public String signUp() {
-        return "sign-up";
+        return TEMPLATES_FOLDER + "sign-up";
     }
 
     @PostMapping("/sign-up")
@@ -40,7 +46,7 @@ public class UserController {
 
     @GetMapping("/sign-in")
     public String signIn() {
-        return "sign-in";
+        return TEMPLATES_FOLDER + "sign-in";
     }
 
     @GetMapping("/sign-out")
@@ -48,6 +54,16 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) new SecurityContextLogoutHandler().logout(request, response, auth);
         return "redirect:/";
+    }
+
+
+    @GetMapping("/list")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String users(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("roles", UserRole.values());
+
+        return TEMPLATES_FOLDER + "list";
     }
 
     public void authenticateUserAndSetSession(String username, HttpServletRequest request) {
