@@ -26,9 +26,9 @@ public class MainController {
     private final UserService userService;
 
     @RequestMapping(value = {"/", "/index", "/main", "/home"}, method = RequestMethod.GET)
-    public String index(@Param("search") String search,
-                        Model model,
-                        @AuthenticationPrincipal User user) {
+    public String getIndexPage(@Param("search") String search,
+                               Model model,
+                               @AuthenticationPrincipal User user) {
         List<Article> articles = StringUtils.isEmpty(search)
                 ? articleService.getAllArticles()
                 : articleService.searchArticle(search);
@@ -40,7 +40,7 @@ public class MainController {
     }
 
     @GetMapping("/contact-us")
-    public String contactUs(Model model, @AuthenticationPrincipal User user) {
+    public String getContactUsPage(Model model, @AuthenticationPrincipal User user) {
         if (user != null) model.addAttribute("user", user);
         model.addAttribute("admins", userService.getAllAdmins());
         return "contact-us";

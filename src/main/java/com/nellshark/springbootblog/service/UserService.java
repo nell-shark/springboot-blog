@@ -25,7 +25,7 @@ public class UserService implements UserDetailsService {
         return getUserByEmail(email);
     }
 
-    public User getById(Long id) {
+    public User getUserById(Long id) {
         log.info("Find a user by id: " + id);
         return userRepository
                 .findById(id)

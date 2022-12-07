@@ -31,9 +31,9 @@ public class ArticleController {
     private final String TEMPLATES_FOLDER = "articles/";
 
     @GetMapping("/{title}")
-    public String getArticle(@PathVariable String title,
-                             Model model,
-                             @AuthenticationPrincipal User user) {
+    public String getArticlePage(@PathVariable String title,
+                                 Model model,
+                                 @AuthenticationPrincipal User user) {
         if (user != null) model.addAttribute("user", user);
         Article articleByTitle = articleService.getByTitle(String.join(" ", title.split("-")));
         List<Comment> comments = commentService.getAllCommentsByArticle(articleByTitle);
@@ -44,8 +44,8 @@ public class ArticleController {
 
     @GetMapping("/create-new-article")
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
-    public String createArticle(Model model,
-                                @AuthenticationPrincipal User user) {
+    public String getCreateArticlePage(Model model,
+                                       @AuthenticationPrincipal User user) {
         model.addAttribute("user", user);
         return TEMPLATES_FOLDER + "create-article";
     }
@@ -72,10 +72,10 @@ public class ArticleController {
 
     @PostMapping("/{title}/add-comment")
     @PreAuthorize("hasAuthority('WRITE_COMMENTS')")
-    public String addComment(@PathVariable String title,
-                             @RequestParam("comment") String comment,
-                             Model model,
-                             @AuthenticationPrincipal User user) {
+    public String addCommentToArticle(@PathVariable String title,
+                                      @RequestParam("comment") String comment,
+                                      Model model,
+                                      @AuthenticationPrincipal User user) {
         Article articleByTitle = articleService.getByTitle(String.join(" ", title.split("-")));
         commentService.saveComment(new Comment(articleByTitle, user, comment));
         model.addAttribute("user", user);

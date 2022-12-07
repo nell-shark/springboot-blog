@@ -1,6 +1,5 @@
 package com.nellshark.springbootblog.controller;
 
-
 import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.model.UserRole;
 import com.nellshark.springbootblog.service.UserService;
@@ -9,15 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,12 +56,21 @@ public class UserController {
 
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String users(Model model) {
+    public String getListUsersPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", UserRole.values());
-
         return TEMPLATES_FOLDER + "list";
     }
+
+    @GetMapping("/{id}")
+    public String getUserPage(@PathVariable("id") Long id,
+                              Model model,
+                              @AuthenticationPrincipal User user) {
+        if (user != null) model.addAttribute("user", user);
+        model.addAttribute("user", userService.getUserById(id));
+        return TEMPLATES_FOLDER + "id";
+    }
+
 
     public void authenticateUserAndSetSession(String username, HttpServletRequest request) {
         request.getSession();

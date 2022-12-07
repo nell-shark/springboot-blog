@@ -10,6 +10,8 @@ import static com.nellshark.springbootblog.model.UserAuthority.*;
 public enum UserRole {
     ROLE_USER(Set.of(WRITE_COMMENTS)),
 
+    ROLE_MODERATOR(Set.of(WRITE_COMMENTS, EDIT_ARTICLES)),
+
     ROLE_ADMIN(Set.of(WRITE_COMMENTS, CREATE_ARTICLES, EDIT_ARTICLES, DELETE_ARTICLES));
 
     private final Set<UserAuthority> permissions;
