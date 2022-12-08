@@ -26,7 +26,6 @@ public class SecurityConfig {
                 .formLogin()
                     .loginPage("/users/sign-in")
                     .permitAll()
-                    .defaultSuccessUrl("/", true)
                     .usernameParameter("email")
                     .passwordParameter("password")
                 .and()
@@ -35,7 +34,6 @@ public class SecurityConfig {
                 .and()
                 .logout()
                     .logoutUrl("/users/sign-out")
-                    .logoutSuccessUrl("/")
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID");
         return http.build();

@@ -17,17 +17,17 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     public List<Comment> getAllCommentsByArticle(Article article) {
-        log.info("Get all comments by Article " + article.toString());
+        log.info("Get all comments by Article " + article);
         return commentRepository.findByArticle(article);
     }
 
     public List<Comment> getAllCommentsByUser(User user) {
-        log.info("Get all comments by User " + user.toString());
+        log.info("Get all comments by User " + user);
         return commentRepository.findByUser(user);
     }
 
     public Comment saveComment(Comment comment) {
-        log.info("Save the comment in db" + comment.toString());
+        log.info("Save the comment in db" + comment);
         return commentRepository.save(comment);
     }
 }

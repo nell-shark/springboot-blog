@@ -18,7 +18,9 @@ public class WebFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest,
+                         ServletResponse servletResponse,
+                         FilterChain filterChain) throws IOException, ServletException {
         ServletResponse newResponse = servletResponse;
 
         if (servletRequest instanceof HttpServletRequest) {

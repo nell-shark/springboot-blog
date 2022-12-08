@@ -8,7 +8,6 @@ import com.nellshark.springbootblog.service.CommentService;
 import com.nellshark.springbootblog.utils.FileUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -56,7 +55,7 @@ public class ArticleController {
                               @RequestParam("image") MultipartFile file,
                               @RequestParam("text") String text) {
         String folderName = "articles" + File.separator + articleService.getNextSeriesId().toString();
-        FileUtils.saveMultipartFileToStorage(file, folderName);
+        FileUtils.saveMultipartFile(file, folderName);
         articleService.saveArticle(new Article(title, file.getOriginalFilename(), text));
         return TEMPLATES_FOLDER + "redirect:/";
     }
@@ -64,9 +63,10 @@ public class ArticleController {
     @PostMapping("/upload-image")
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
     public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
-        boolean isFileSaved = FileUtils.saveMultipartFileToStorage(file, articleService.getNextSeriesId().toString());
-
-        if (!isFileSaved) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        // TODO: CHANGE
+//        boolean isFileSaved = FileUtils.saveMultipartFile(file, articleService.getNextSeriesId().toString());
+//
+//        if (!isFileSaved) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         return ResponseEntity.ok("File uploaded successfully.");
     }
 

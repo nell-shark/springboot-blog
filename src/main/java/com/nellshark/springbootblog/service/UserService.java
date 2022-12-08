@@ -4,12 +4,14 @@ import com.nellshark.springbootblog.exception.UserNotFoundException;
 import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.model.UserRole;
 import com.nellshark.springbootblog.repository.UserRepository;
+import com.nellshark.springbootblog.utils.FileUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -74,6 +76,13 @@ public class UserService implements UserDetailsService {
         if (user.getPassword().equals(encodedPassword)) return;
 
         user.setPassword(encodedPassword);
+        userRepository.save(user);
+    }
+
+    public void updateAvatar(MultipartFile file, User user) {
+        log.info("Update the user's avatar: " + user);
+        String fileName = FileUtils.saveUserAvatar(file, user);
+        user.setImage(fileName);
         userRepository.save(user);
     }
 }

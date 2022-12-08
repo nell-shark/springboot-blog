@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -84,14 +85,23 @@ public class UserController {
 
     @PostMapping("/{id}/edit")
     @PreAuthorize("#id.equals(authentication.principal.id)")
-    public String updateUser(@PathVariable("id") Long id,
-                             @RequestParam("email") String email,
-                             @RequestParam("password") String password,
-                             Model model,
-                             @AuthenticationPrincipal User user) {
-        model.addAttribute("user", user);
+    public String updateEmailAndPassword(@PathVariable("id") Long id,
+                                         @RequestParam("email") String email,
+                                         @RequestParam("password") String password,
+                                         Model model,
+                                         @AuthenticationPrincipal User user) {
         userService.updateEmail(email, user);
         userService.updatePassword(password, user);
+        return "redirect:/" + "users/" + id;
+    }
+
+    @PostMapping("/{id}/edit/avatar")
+    @PreAuthorize("#id.equals(authentication.principal.id)")
+    public String uploadUserAvatar(@PathVariable("id") Long id,
+                                   @RequestParam("image") MultipartFile image,
+                                   Model model,
+                                   @AuthenticationPrincipal User user) {
+        userService.updateAvatar(image, user);
         return "redirect:/" + "users/" + id;
     }
 
