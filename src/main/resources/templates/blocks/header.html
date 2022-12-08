@@ -28,7 +28,8 @@
                              height="32" class="rounded-circle">
                     </a>
                     <ul class="dropdown-menu text-small" style="">
-                        <li><a class="dropdown-item" href="@{'users/'+${user.id}}">Profile</a></li>
+                        <li><a class="dropdown-item" th:href="@{'/users/'+${user.id}}">Profile</a></li>
+                        <li><a class="dropdown-item" th:href="@{'/users/'+${user.id}+'/edit'}">Edit</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

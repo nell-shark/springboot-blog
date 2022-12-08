@@ -8,15 +8,27 @@
 <body>
 <div th:insert="blocks/header :: header" th:remove="tag"></div>
 
-<main>
-    <div th:each="admin : ${admins}" class="mt-3">
-        <a th:href="@{'mailto: '+${admin.getEmail()}}" class="text-primary nav-link">
-            <div class="d-flex flex-column justify-content-center align-items-center">
-                <img width="140" height="140" class="rounded-circle"
-                     th:src="${admin.getImage().orElse('/images/user.svg')}" alt="user.svg"/>
-                <h2 class="fw-light mb-5" th:text="${admin.email}"></h2>
+<main style="background-color: #eee;">
+    <div th:each="user : ${users}" th:remove="tag">
+        <div class="container h-100 py-3">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-md-12 col-xl-4">
+                    <div class="card" style="border-radius: 15px;">
+                        <div class="card-body text-center">
+                            <div class="mt-3 mb-4">
+                                <img th:src="${user.getImage().orElse('/images/user.svg')}" alt="Avatar"
+                                     class="rounded-circle img-fluid" style="width: 100px;"/>
+                            </div>
+                            <h4 class="mb-2" th:text="${user.getEmail()}"></h4>
+                            <p class="text-muted mb-4" th:text="${user.getRole()}"></p>
+                            <a th:href="@{'mailto: '+${user.getEmail()}}" class="btn btn-primary btn-rounded btn-lg">
+                                Message now
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </a>
+        </div>
     </div>
 </main>
 

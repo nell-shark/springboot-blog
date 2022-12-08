@@ -49,9 +49,31 @@ public class UserService implements UserDetailsService {
         return userRepository.findByRole(UserRole.ROLE_ADMIN);
     }
 
+    public List<User> getAllModerators() {
+        log.info("Find all moderators");
+        return userRepository.findByRole(UserRole.ROLE_MODERATOR);
+    }
+
     public User saveUser(User user) {
         log.info("Save the user in the db: " + user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    public void updateEmail(String newEmail, User user) {
+        log.info("Update the user's email: " + user);
+        if (user.getEmail().equals(newEmail)) return;
+
+        user.setEmail(newEmail);
+        userRepository.save(user);
+    }
+
+    public void updatePassword(String newPassword, User user) {
+        log.info("Update the user's password: " + user);
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        if (user.getPassword().equals(encodedPassword)) return;
+
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
     }
 }

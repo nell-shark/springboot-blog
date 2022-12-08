@@ -4,18 +4,14 @@
     <div th:replace="blocks/head :: head"></div>
     <title>Error</title>
 </head>
-
 <body>
-<div th:insert="blocks/header :: header" th:remove="tag"></div>
-
-<div class="d-flex justify-content-center align-items-center mt-4">
-    <img th:src="@{'/images/error.svg'}" alt="error.svg" class="p-2 w-25">
-    <div>
-        <h1 class="text-danger text-center">ERROR</h1>
-        <h4 th:text="${errorMessage}" class="bg-warning"></h4>
+<div class="d-flex align-items-center justify-content-center vh-100">
+    <div class="text-center">
+        <h1 class="display-1 fw-bold">404</h1>
+        <p class="fs-3 text-danger">Opps!</p>
+        <p class="lead" th:text="${exception}"></p>
+        <a href="/" class="btn btn-primary">Go Home</a>
     </div>
 </div>
-
-<div th:insert="blocks/footer :: footer" th:remove="tag"></div>
 </body>
 </html>

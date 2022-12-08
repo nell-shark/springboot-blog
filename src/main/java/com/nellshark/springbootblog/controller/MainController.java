@@ -6,6 +6,7 @@ import com.nellshark.springbootblog.service.ArticleService;
 import com.nellshark.springbootblog.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,7 +43,10 @@ public class MainController {
     @GetMapping("/contact-us")
     public String getContactUsPage(Model model, @AuthenticationPrincipal User user) {
         if (user != null) model.addAttribute("user", user);
-        model.addAttribute("admins", userService.getAllAdmins());
+        List<User> admins = userService.getAllAdmins();
+        List<User> moderators = userService.getAllModerators();
+
+        model.addAttribute("users", ListUtils.union(admins, moderators));
         return "contact-us";
     }
 }

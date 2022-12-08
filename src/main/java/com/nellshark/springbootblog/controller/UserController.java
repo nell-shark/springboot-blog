@@ -2,6 +2,7 @@ package com.nellshark.springbootblog.controller;
 
 import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.model.UserRole;
+import com.nellshark.springbootblog.service.CommentService;
 import com.nellshark.springbootblog.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +26,11 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class UserController {
     private final UserService userService;
-
+    private final CommentService commentService;
     private final String TEMPLATES_FOLDER = "users/";
 
-
     @GetMapping("/sign-up")
-    public String signUp() {
+    public String getSignUpPage() {
         return TEMPLATES_FOLDER + "sign-up";
     }
 
@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/sign-in")
-    public String signIn() {
+    public String getSignInPage() {
         return TEMPLATES_FOLDER + "sign-in";
     }
 
@@ -67,10 +67,33 @@ public class UserController {
                               Model model,
                               @AuthenticationPrincipal User user) {
         if (user != null) model.addAttribute("user", user);
-        model.addAttribute("user", userService.getUserById(id));
+        User userById = userService.getUserById(id);
+        model.addAttribute("user", userById);
+        model.addAttribute("comments", commentService.getAllCommentsByUser(userById));
         return TEMPLATES_FOLDER + "id";
     }
 
+    @GetMapping("/{id}/edit")
+    @PreAuthorize("#id.equals(authentication.principal.id)")
+    public String getEditPage(@PathVariable("id") Long id,
+                              Model model,
+                              @AuthenticationPrincipal User user) {
+        model.addAttribute("user", user);
+        return TEMPLATES_FOLDER + "edit";
+    }
+
+    @PostMapping("/{id}/edit")
+    @PreAuthorize("#id.equals(authentication.principal.id)")
+    public String updateUser(@PathVariable("id") Long id,
+                             @RequestParam("email") String email,
+                             @RequestParam("password") String password,
+                             Model model,
+                             @AuthenticationPrincipal User user) {
+        model.addAttribute("user", user);
+        userService.updateEmail(email, user);
+        userService.updatePassword(password, user);
+        return "redirect:/" + "users/" + id;
+    }
 
     public void authenticateUserAndSetSession(String username, HttpServletRequest request) {
         request.getSession();

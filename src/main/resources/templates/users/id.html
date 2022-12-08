@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <div th:replace="blocks/head :: head"></div>
     <title>User</title>
@@ -24,15 +24,28 @@
                             <div class="flex-grow-1 ms-3">
                                 <h5 class="mb-1" th:text="${user.getEmail()}"></h5>
                                 <p class="mb-2 pb-1" style="color: #2b2a2a;" th:text="${user.getRole()}"></p>
-                                <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
-                                     style="background-color: #efefef;">
-                                    <div>
-                                        <p class="small text-muted mb-1">Comments</p>
-                                        <p class="mb-0">41</p>
+                                <div th:each="comment : ${comments}" th:remove="tag">
+                                    <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                                         style="background-color: #efefef;">
+                                        <div>
+                                            <a class="nav-link text-muted"
+                                               th:href="@{'/articles/'+${comment.getArticle().getTitleLink()}}">
+                                                <p
+                                                        class="small mb-1"
+                                                        th:text="${comment.getArticle().getTitle()}">
+                                                </p>
+                                            </a>
+                                            <p class="mb-0" th:text="${comment.getContent()}"></p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="d-flex pt-1">
-                                    <button type="button" class="btn btn-outline-primary me-1 flex-grow-1">Chat</button>
+                                    <a th:href="@{'mailto: '+${user.getEmail()}}"
+                                       class="btn btn-outline-primary me-1 flex-grow-1">Chat</a>
+                                    <a sec:authorize="isAuthenticated()"
+                                       th:if="${#strings.equals({#authentication.name}, {user.getEmail()})}"
+                                       th:href="@{'/users/' + ${user.getId()} + '/edit'}"
+                                       type="button" class="btn btn-outline-primary me-1 flex-grow-1">Edit</a>
                                 </div>
                             </div>
                         </div>

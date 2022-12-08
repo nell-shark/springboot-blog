@@ -17,27 +17,27 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     public List<Article> getAllArticles() {
-        log.info("Find all articles");
+        log.info("Get all articles");
         return articleRepository
                 .findAll(Sort.by(Sort.Direction.DESC, "published"));
     }
 
-    public Article getById(Long id) {
-        log.info("Find an article by id: " + id);
+    public Article getArticleById(Long id) {
+        log.info("Get an article by id: " + id);
         return articleRepository
                 .findById(id)
-                .orElseThrow(() -> new ArticleNotFoundException("Article with id=%s not found".formatted(id)));
+                .orElseThrow(() -> new ArticleNotFoundException("Article with id='%s' not found".formatted(id)));
     }
 
     public Article getByTitle(String title) {
-        log.info("Find an article by title: " + title);
+        log.info("Get an article by title: " + title);
         return articleRepository
                 .findByTitle(title)
-                .orElseThrow(() -> new ArticleNotFoundException("Article with title=%s not found".formatted(title)));
+                .orElseThrow(() -> new ArticleNotFoundException("Article with title='%s' not found".formatted(title)));
     }
 
     public List<Article> searchArticle(String search) {
-        log.info("Search article (%s)".formatted(search));
+        log.info("Search an article (%s)".formatted(search));
         return articleRepository.search(search);
     }
 
@@ -47,6 +47,7 @@ public class ArticleService {
     }
 
     public Long getNextSeriesId() {
+        log.info("Get id of new article");
         return articleRepository.getMaxId() + 1L;
     }
 
