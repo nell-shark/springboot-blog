@@ -7,7 +7,7 @@ CREATE TABLE articles (
     title VARCHAR(255) NOT NULL UNIQUE,
     content TEXT NOT NULL,
     published DATE NOT NULL,
-    image TEXT NOT NULL
+    thumbnail TEXT NOT NULL
 );
 
 CREATE TABLE users (
@@ -15,7 +15,7 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(255) NOT NULL,
-    image TEXT DEFAULT NULL
+    avatar TEXT DEFAULT NULL
 );
 
 CREATE TABLE comments (
@@ -26,16 +26,28 @@ CREATE TABLE comments (
     published DATE NOT NULL
 );
 
-INSERT INTO articles (title, content, published, image) VALUES
-    ('Wet Leg, Nova Twins and Kojey Radical on the healing power of music', '', '2022-10-22', 'thumbnail.webp'),
-    ('Xi Jinping''s party is just getting started', '', '2022-10-23', 'thumbnail.webp'),
-    ('How a magician-mathematician revealed a casino loophole', '', '2022-10-24', 'thumbnail.webp'),
-    ('A fish that sparked a national obsession', '', '2022-10-25', 'thumbnail.webp');
+INSERT INTO articles (title, content, published, thumbnail) VALUES
+    ('Wet Leg, Nova Twins and Kojey Radical on the healing power of music',
+     '',
+     '2022-10-22',
+     '/storage/articles/1/thumbnail.webp'),
+    ('Xi Jinping''s party is just getting started',
+     '',
+     '2022-10-23',
+     '/storage/articles/2/thumbnail.webp'),
+    ('How a magician-mathematician revealed a casino loophole',
+     '',
+     '2022-10-24',
+     '/storage/articles/3/thumbnail.webp'),
+    ('A fish that sparked a national obsession',
+     '',
+     '2022-10-25',
+     '/storage/articles/4/thumbnail.webp');
 
 -- password = password123
-INSERT INTO users (email, password, role, image) VALUES
-    ('user1@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'ROLE_USER', 'avatar.svg'),
-    ('user2@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'ROLE_USER', 'avatar.svg'),
+INSERT INTO users (email, password, role, avatar) VALUES
+    ('user1@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'ROLE_USER', '/storage/users/1/avatar.svg'),
+    ('user2@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'ROLE_USER', '/storage/users/2/avatar.svg'),
     ('user3@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'ROLE_USER', NULL),
     ('moderator1@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'ROLE_MODERATOR', NULL),
     ('moderator2@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'ROLE_MODERATOR', NULL),

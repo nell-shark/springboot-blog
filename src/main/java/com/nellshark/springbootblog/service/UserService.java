@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -79,10 +80,10 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void updateAvatar(MultipartFile file, User user) {
+    public void updateAvatar(MultipartFile file, User user) throws IOException {
         log.info("Update the user's avatar: " + user);
         String fileName = FileUtils.saveUserAvatar(file, user);
-        user.setImage(fileName);
+        user.setAvatar(fileName);
         userRepository.save(user);
     }
 }

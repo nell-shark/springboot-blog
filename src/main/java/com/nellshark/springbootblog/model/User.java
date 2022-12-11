@@ -29,8 +29,8 @@ public class User implements UserDetails {
     @Column(name = "role")
     private UserRole role;
 
-    @Column(name = "image")
-    private String image;
+    @Column(name = "avatar")
+    private String avatar;
 
     public User(String email, String password) {
         this.email = email;
@@ -38,8 +38,8 @@ public class User implements UserDetails {
         this.role = UserRole.ROLE_USER;
     }
 
-    public Optional<String> getImage() {
-        return Optional.ofNullable(image);
+    public Optional<String> getAvatar() {
+        return Optional.ofNullable(avatar);
     }
 
     @Override

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -29,11 +30,20 @@ public class ArticleService {
                 .orElseThrow(() -> new ArticleNotFoundException("Article with id='%s' not found".formatted(id)));
     }
 
-    public Article getByTitle(String title) {
+    public Article getArticleByTitle(String title) {
         log.info("Get an article by title: " + title);
         return articleRepository
                 .findByTitle(title)
                 .orElseThrow(() -> new ArticleNotFoundException("Article with title='%s' not found".formatted(title)));
+    }
+
+    public Article getArticleByLink(String link) {
+        log.info("Get an article by link: " + link);
+        return articleRepository.findAll()
+                .stream()
+                .filter(article -> article.getLink().equals(link))
+                .findFirst()
+                .orElseThrow(() -> new ArticleNotFoundException("Article with link='%s' not found".formatted(link)));
     }
 
     public List<Article> searchArticle(String search) {
@@ -43,11 +53,14 @@ public class ArticleService {
 
     public void saveArticle(Article article) {
         log.info("Save the article in db: " + article);
+        if (article.getPublished() == null) {
+            article.setPublished(LocalDate.now());
+        }
         articleRepository.save(article);
     }
 
     public Long getNextSeriesId() {
-        log.info("Get id of new article");
+        log.info("Get id of the new article");
         return articleRepository.getMaxId() + 1L;
     }
 

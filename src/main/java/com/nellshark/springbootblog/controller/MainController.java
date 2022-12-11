@@ -8,13 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class MainController {
     private final UserService userService;
 
     @RequestMapping(value = {"/", "/index", "/main", "/home"}, method = RequestMethod.GET)
-    public String getIndexPage(@Param("search") String search,
+    public String getIndexPage(@RequestParam(value = "search", required = false) String search,
                                Model model,
                                @AuthenticationPrincipal User user) {
         List<Article> articles = StringUtils.isEmpty(search)

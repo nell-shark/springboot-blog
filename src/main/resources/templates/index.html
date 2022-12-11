@@ -33,13 +33,13 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
             <div th:each="article : ${articles}" th:remove="tag">
                 <div class="col">
-                    <a th:href="@{'/articles/'+${article.getTitleLink()}}" class="nav-link">
+                    <a th:href="@{'/articles/'+${article.getLink()}}" class="nav-link">
                         <div class="card mb-4 card-animation">
                             <img class="card-img-top"
-                                 th:src="@{'/storage/articles/'+${article.id}+'/'+${article.image}}"
-                                 alt="${article.image}">
+                                 th:src="${article.getThumbnail()}"
+                                 alt="thumbnail">
                             <div class="card-body">
-                                <p class="card-text" th:text="${article.title}"></p>
+                                <p class="card-text" th:text="${article.getTitle()}"></p>
                             </div>
                         </div>
                     </a>

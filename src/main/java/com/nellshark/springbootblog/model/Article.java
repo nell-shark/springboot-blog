@@ -25,24 +25,28 @@ public class Article {
     @Column(name = "published")
     private LocalDate published;
 
-    @Column(name = "image")
-    private String image;
+    @Column(name = "thumbnail")
+    private String thumbnail;
 
-    public Article(String title, String image, String content) {
+    @Transient
+    private String link;
+
+    public Article(String title, String thumbnail, String content) {
         this.title = title;
-        this.image = image;
+        this.thumbnail = thumbnail;
         this.content = content;
         this.published = LocalDate.now();
     }
 
-    public Article(String title, String image, String content, LocalDate date) {
+    public Article(String title, String thumbnail, String content, LocalDate date) {
         this.title = title;
-        this.image = image;
+        this.thumbnail = thumbnail;
         this.content = content;
         this.published = date;
     }
 
-    public String getTitleLink() {
-        return String.join("-", getTitle().split(" "));
+    public String getLink() {
+        return getTitle().replaceAll("[._~:/?#@!$&'()*+,;=]", "")
+                .replace(" ", "-");
     }
 }

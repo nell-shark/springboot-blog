@@ -20,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/users")
@@ -28,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UserController {
     private final UserService userService;
     private final CommentService commentService;
-    private final String TEMPLATES_FOLDER = "users/";
+    private final String TEMPLATES_FOLDER = "users" + File.separator;
 
     @GetMapping("/sign-up")
     public String getSignUpPage() {
@@ -36,7 +38,9 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public String createNewUser(@RequestParam String email, @RequestParam String password, HttpServletRequest request) {
+    public String createNewUser(@RequestParam String email,
+                                @RequestParam String password,
+                                HttpServletRequest request) {
         User user = userService.saveUser(new User(email, password));
         authenticateUserAndSetSession(user.getUsername(), request);
         return "redirect:/";
@@ -57,7 +61,8 @@ public class UserController {
 
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String getListUsersPage(Model model) {
+    public String getListUsersPage(Model model, @AuthenticationPrincipal User admin) {
+        model.addAttribute("user", admin);
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", UserRole.values());
         return TEMPLATES_FOLDER + "list";
@@ -100,7 +105,7 @@ public class UserController {
     public String uploadUserAvatar(@PathVariable("id") Long id,
                                    @RequestParam("image") MultipartFile image,
                                    Model model,
-                                   @AuthenticationPrincipal User user) {
+                                   @AuthenticationPrincipal User user) throws IOException {
         userService.updateAvatar(image, user);
         return "redirect:/" + "users/" + id;
     }

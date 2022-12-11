@@ -16,9 +16,8 @@
                     <div class="card-body p-4">
                         <div class="d-flex text-black">
                             <div class="flex-shrink-0">
-                                <img th:src="${user.getImage().isPresent()}
-                                    ? ('/storage/users/' + ${user.id} + '/' + ${user.getImage().get()})
-                                    : '/images/user.svg'" alt="Avatar" class="img-fluid"
+                                <img th:src="${user.getAvatar().orElse('/images/avatar.svg')}" alt="Avatar"
+                                     class="img-fluid"
                                      style="width: 180px; border-radius: 10px;">
                             </div>
                             <div class="flex-grow-1 ms-3">
@@ -29,7 +28,7 @@
                                          style="background-color: #efefef;">
                                         <div>
                                             <a class="nav-link text-muted"
-                                               th:href="@{'/articles/'+${comment.getArticle().getTitleLink()}}">
+                                               th:href="@{'/articles/'+${comment.getArticle().getLink()}}">
                                                 <p
                                                         class="small mb-1"
                                                         th:text="${comment.getArticle().getTitle()}">
