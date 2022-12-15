@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="blocks/head :: head"></div>
+    <title>List of Articles</title>
+</head>
+<body>
+<div th:insert="blocks/header :: header" th:remove="tag"></div>
+
+<section class="container mt-5">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Title</th>
+            <th scope="col">Published</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="article : ${articles}" th:remove="tag">
+            <tr>
+                <th th:text="${article.getId()}"></th>
+                <td th:text="${article.getTitle()}"></td>
+                <td th:text="${article.getPublished()}"></td>
+                <td><a th:href="@{'/articles/' + ${article.getLink()} + '/edit'}" type="button"
+                       class="btn btn-outline-primary">Edit</a></td>
+                <td><a th:href="@{'/articles/' + ${article.getLink()} + '/delete'}" type="button"
+                       class="btn btn-outline-danger">Delete</a></td>
+            </tr>
+        </div>
+    </table>
+</section>
+
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

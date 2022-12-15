@@ -2,10 +2,13 @@ tinymce.init({
     selector: "textarea#content",
     menubar: false,
     statusbar: false,
-    plugins: ["image", "code"],
-    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | image | code",
+    plugins: ["image", "code", "autoresize"],
+    toolbar: "undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | image | code",
     images_upload_url: "/articles/upload-image",
     images_upload_handler: imageUploadHandler,
+    image_dimensions: false,
+    // content_style: 'img {width: 100%; height: 100%}',
+    // height: '100%'
 });
 
 

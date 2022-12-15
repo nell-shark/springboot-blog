@@ -37,9 +37,7 @@ public class ArticleController {
 
     @GetMapping("/{link}")
     public String getArticlePage(@PathVariable String link,
-                                 Model model,
-                                 @AuthenticationPrincipal User user) {
-        if (user != null) model.addAttribute("user", user);
+                                 Model model) {
         Article article = articleService.getArticleByLink(link);
         model.addAttribute("article", article);
         List<Comment> comments = commentService.getAllCommentsByArticle(article);
@@ -49,10 +47,15 @@ public class ArticleController {
 
     @GetMapping("/create")
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
-    public String getCreateArticlePage(Model model,
-                                       @AuthenticationPrincipal User user) {
-        model.addAttribute("user", user);
+    public String getCreateArticlePage() {
         return TEMPLATES_FOLDER + "create";
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String getListOfArticlesPage(Model model) {
+        model.addAttribute("articles", articleService.getAllArticles());
+        return TEMPLATES_FOLDER + "list";
     }
 
     @PostMapping("/create")
@@ -100,11 +103,11 @@ public class ArticleController {
     @PreAuthorize("hasAuthority('WRITE_COMMENTS')")
     public String addCommentToArticle(@PathVariable String link,
                                       @RequestParam("comment") String comment,
-                                      Model model,
                                       @AuthenticationPrincipal User user) {
         Article articleByTitle = articleService.getArticleByLink(link);
         commentService.saveComment(new Comment(articleByTitle, user, comment));
-        model.addAttribute("user", user);
         return "redirect:/articles/" + link;
     }
+
+
 }

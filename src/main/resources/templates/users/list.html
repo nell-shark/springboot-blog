@@ -12,15 +12,21 @@
         <thead>
         <tr>
             <th scope="col">id</th>
+            <th scope="col">Avatar</th>
             <th scope="col">Email</th>
             <th scope="col">Role</th>
-            <th scope="col">Avatar</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
         </tr>
         </thead>
         <tbody>
         <div th:each="user : ${users}" th:remove="tag">
             <tr>
                 <th scope="row" th:text="${user.getId()}"></th>
+                <td>
+                    <img th:src="${user.getAvatar().orElse('/images/avatar.svg')}" alt="Avatar" width="50px"
+                         height="50px">
+                </td>
                 <td th:text="${user.getEmail()}"></td>
                 <td>
                     <select class="form-select">
@@ -31,10 +37,10 @@
                         </div>
                     </select>
                 </td>
-                <td>
-                    <img th:src="${user.getAvatar().orElse('/images/avatar.svg')}" alt="Avatar" width="50px"
-                         height="50px">
-                </td>
+                <td><a th:href="@{'/users/' + ${user.getId()} + '/edit'}" type="button"
+                       class="btn btn-outline-primary">Edit</a></td>
+                <td><a th:href="@{'/users/' + ${user.getId()} + '/delete'}" type="button"
+                       class="btn btn-outline-danger">Delete</a></td>
             </tr>
         </div>
     </table>

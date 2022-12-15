@@ -33,7 +33,11 @@
                         </li>
                         <li sec:authorize="hasRole('ROLE_ADMIN')">
                             <a class="dropdown-item"
-                               href="/users/list">Users</a>
+                               href="/users/list">List of Users</a>
+                        </li>
+                        <li sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a class="dropdown-item"
+                               href="/articles/list">List of Articles</a>
                         </li>
                         <li sec:authorize="hasAuthority('CREATE_ARTICLES')">
                             <a class="dropdown-item"

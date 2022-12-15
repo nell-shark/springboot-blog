@@ -7,13 +7,18 @@
 <body>
 <div th:insert="blocks/header :: header" th:remove="tag"></div>
 
-<div class="container py-4">
+<section class="py-5 text-center container">
+    <h1 class="fw-light" th:text="${article.getTitle()}"></h1>
+    <img th:src="${article.getThumbnail()}" class="w-100 h-50 rounded ">
+</section>
+
+<div class="container pb-4">
     <div class="p-5 mb-4 bg-light rounded-3">
         <div th:remove="tag" th:utext="${article.content}"></div>
     </div>
 </div>
 
-<div th:if="${user != null} OR ${!comments.isEmpty()}" class="row d-flex justify-content-center">
+<div th:if="${user != null} OR ${!comments.isEmpty()}" class="d-flex justify-content-center">
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-0 border" style="background-color: #f0f2f5;">
             <div class="card-body p-4">
@@ -29,7 +34,7 @@
                         <div class="card-body">
                             <p th:text="${comment.getContent()}"></p>
                             <div class="d-flex justify-content-between">
-                                <a th:href="@{'mailto: '+${comment.getUser().getEmail()}}"
+                                <a th:href="@{'/users/' + ${comment.getUser().getId()}}"
                                    class="d-flex flex-row align-items-center nav-link">
                                     <img th:src="${comment.getUser().getAvatar().orElse('/images/avatar.svg')}"
                                          alt="avatar"

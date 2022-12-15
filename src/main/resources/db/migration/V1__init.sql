@@ -27,22 +27,22 @@ CREATE TABLE comments (
 );
 
 INSERT INTO articles (title, content, published, thumbnail) VALUES
-    ('Wet Leg, Nova Twins and Kojey Radical on the healing power of music',
+    ('QAnon, adrift after Trump’s defeat, finds new life in Elon Musk’s Twitter',
      '',
      '2022-10-22',
-     '/storage/articles/1/thumbnail.webp'),
-    ('Xi Jinping''s party is just getting started',
+     '/storage/articles/1/thumbnail.png'),
+    ('For new NCI director, work turns personal: She is diagnosed with cancer',
      '',
      '2022-10-23',
-     '/storage/articles/2/thumbnail.webp'),
-    ('How a magician-mathematician revealed a casino loophole',
+     '/storage/articles/2/thumbnail.png'),
+    ('In a new cocktail book, New Orleans has a Cure for what ails you',
      '',
      '2022-10-24',
-     '/storage/articles/3/thumbnail.webp'),
-    ('A fish that sparked a national obsession',
+     '/storage/articles/3/thumbnail.png'),
+    ('Kale salad with squash and pomegranate is a feast for the eyes',
      '',
      '2022-10-25',
-     '/storage/articles/4/thumbnail.webp');
+     '/storage/articles/4/thumbnail.png');
 
 -- password = password123
 INSERT INTO users (email, password, role, avatar) VALUES

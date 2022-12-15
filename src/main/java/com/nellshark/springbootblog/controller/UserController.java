@@ -59,32 +59,25 @@ public class UserController {
     }
 
 
+    @GetMapping("/{id}")
+    public String getUserPage(@PathVariable("id") Long id, Model model) {
+        User userById = userService.getUserById(id);
+        model.addAttribute("userById", userById);
+        model.addAttribute("comments", commentService.getAllCommentsByUser(userById));
+        return TEMPLATES_FOLDER + "id";
+    }
+
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String getListUsersPage(Model model, @AuthenticationPrincipal User admin) {
-        model.addAttribute("user", admin);
+    public String getListOfUsersPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", UserRole.values());
         return TEMPLATES_FOLDER + "list";
     }
 
-    @GetMapping("/{id}")
-    public String getUserPage(@PathVariable("id") Long id,
-                              Model model,
-                              @AuthenticationPrincipal User user) {
-        if (user != null) model.addAttribute("user", user);
-        User userById = userService.getUserById(id);
-        model.addAttribute("user", userById);
-        model.addAttribute("comments", commentService.getAllCommentsByUser(userById));
-        return TEMPLATES_FOLDER + "id";
-    }
-
     @GetMapping("/{id}/edit")
     @PreAuthorize("#id.equals(authentication.principal.id)")
-    public String getEditPage(@PathVariable("id") Long id,
-                              Model model,
-                              @AuthenticationPrincipal User user) {
-        model.addAttribute("user", user);
+    public String getEditPage(@PathVariable("id") Long id) {
         return TEMPLATES_FOLDER + "edit";
     }
 
@@ -93,7 +86,6 @@ public class UserController {
     public String updateEmailAndPassword(@PathVariable("id") Long id,
                                          @RequestParam("email") String email,
                                          @RequestParam("password") String password,
-                                         Model model,
                                          @AuthenticationPrincipal User user) {
         userService.updateEmail(email, user);
         userService.updatePassword(password, user);
@@ -104,7 +96,6 @@ public class UserController {
     @PreAuthorize("#id.equals(authentication.principal.id)")
     public String uploadUserAvatar(@PathVariable("id") Long id,
                                    @RequestParam("image") MultipartFile image,
-                                   Model model,
                                    @AuthenticationPrincipal User user) throws IOException {
         userService.updateAvatar(image, user);
         return "redirect:/" + "users/" + id;
