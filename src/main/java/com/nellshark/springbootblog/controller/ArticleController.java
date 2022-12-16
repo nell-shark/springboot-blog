@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -31,6 +30,8 @@ public class ArticleController {
     private final ArticleService articleService;
     private final CommentService commentService;
     private final String TEMPLATES_FOLDER = "articles" + File.separator;
+
+    //TODO: get method
     private final String ARTICLE_STORAGE_FOLDER = File.separator + "storage" + File.separator
             + "articles" + File.separator
             + "%d" + File.separator;
@@ -40,9 +41,7 @@ public class ArticleController {
                                  Model model) {
         Article article = articleService.getArticleByLink(link);
         model.addAttribute("article", article);
-        List<Comment> comments = commentService.getAllCommentsByArticle(article);
-        model.addAttribute("comments", comments);
-        return TEMPLATES_FOLDER + "article";
+        return TEMPLATES_FOLDER + "link";
     }
 
     @GetMapping("/create")
@@ -99,6 +98,41 @@ public class ArticleController {
         );
     }
 
+    @GetMapping("/{link}/edit")
+    @PreAuthorize("hasAuthority('EDIT_ARTICLES')")
+    public String getEditArticlePage(@PathVariable String link, Model model) {
+        model.addAttribute("article", articleService.getArticleByLink(link));
+        return TEMPLATES_FOLDER + "edit";
+    }
+
+    @PatchMapping("/{link}/edit")
+    @PreAuthorize("hasAuthority('EDIT_ARTICLES')")
+    public String updateArticle(@PathVariable String link,
+                                Model model,
+                                @RequestParam("title") String title,
+                                @RequestParam("thumbnail") MultipartFile thumbnail,
+                                @RequestParam("content") String content) throws IOException {
+        Article updatedArticle = new Article();
+        updatedArticle.setTitle(title);
+
+        log.warn(thumbnail.toString());
+
+        if (!thumbnail.isEmpty()) {
+            FileUtils.saveArticleImage(thumbnail, updatedArticle);
+
+            // TODO CHANGE FILE SEPARATOR
+            String thumbnailPath = String.format(ARTICLE_STORAGE_FOLDER, articleService.getNextSeriesId())
+                    + thumbnail.getOriginalFilename();
+            updatedArticle.setThumbnail(thumbnailPath);
+        }
+
+        updatedArticle.setContent(content);
+
+        articleService.updateArticle(link, updatedArticle);
+
+        return "redirect:/articles/" + link;
+    }
+
     @PostMapping("/{link}/add-comment")
     @PreAuthorize("hasAuthority('WRITE_COMMENTS')")
     public String addCommentToArticle(@PathVariable String link,
@@ -108,6 +142,4 @@ public class ArticleController {
         commentService.saveComment(new Comment(articleByTitle, user, comment));
         return "redirect:/articles/" + link;
     }
-
-
 }

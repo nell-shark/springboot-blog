@@ -18,20 +18,20 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     public List<Article> getAllArticles() {
-        log.info("Get all articles");
+        log.info("Getting all articles");
         return articleRepository
                 .findAll(Sort.by(Sort.Direction.DESC, "published"));
     }
 
     public Article getArticleById(Long id) {
-        log.info("Get an article by id: " + id);
+        log.info("Getting an article by id: " + id);
         return articleRepository
                 .findById(id)
                 .orElseThrow(() -> new ArticleNotFoundException("Article with id='%s' not found".formatted(id)));
     }
 
     public Article getArticleByTitle(String title) {
-        log.info("Get an article by title: " + title);
+        log.info("Getting an article by title: " + title);
         return articleRepository
                 .findByTitle(title)
                 .orElseThrow(() -> new ArticleNotFoundException("Article with title='%s' not found".formatted(title)));
@@ -47,25 +47,36 @@ public class ArticleService {
     }
 
     public List<Article> searchArticle(String search) {
-        log.info("Search an article (%s)".formatted(search));
+        log.info("Searching an article (%s)".formatted(search));
         return articleRepository.search(search);
     }
 
     public void saveArticle(Article article) {
-        log.info("Save the article in db: " + article);
+        log.info("Saving the article in db: " + article);
         if (article.getPublished() == null) {
             article.setPublished(LocalDate.now());
         }
         articleRepository.save(article);
     }
 
+    public void updateArticle(String link, Article updatedArticle) {
+        log.info("Updating article with link: " + link);
+        Article articleById = getArticleByLink(link);
+        articleById.setTitle(updatedArticle.getTitle());
+        if (updatedArticle.getThumbnail() != null)
+            articleById.setThumbnail(updatedArticle.getThumbnail());
+        articleById.setContent(updatedArticle.getContent());
+
+        articleRepository.save(articleById);
+    }
+
     public Long getNextSeriesId() {
-        log.info("Get id of the new article");
+        log.info("Getting id of the new article");
         return articleRepository.getMaxId() + 1L;
     }
 
     public void deleteAllArticles() {
-        log.info("Delete all articles");
+        log.info("Deleting all articles");
         articleRepository.deleteAll();
     }
 }

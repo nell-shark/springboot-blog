@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="blocks/head :: head"></div>
@@ -22,7 +22,10 @@
         <div th:each="article : ${articles}" th:remove="tag">
             <tr>
                 <th th:text="${article.getId()}"></th>
-                <td th:text="${article.getTitle()}"></td>
+                <td>
+                    <a th:href="@{'/articles/' + ${article.getLink()}}"
+                       class="nav-link" th:text="${article.getTitle()}">Edit</a>
+                </td>
                 <td th:text="${article.getPublished()}"></td>
                 <td><a th:href="@{'/articles/' + ${article.getLink()} + '/edit'}" type="button"
                        class="btn btn-outline-primary">Edit</a></td>

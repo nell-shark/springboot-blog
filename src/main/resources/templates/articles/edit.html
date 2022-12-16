@@ -12,10 +12,11 @@
 <div th:insert="blocks/header :: header" th:remove="tag"></div>
 
 <div class="container h-100 mt-4">
-    <form action="/articles/create" method="POST" enctype="multipart/form-data">
-        <input id="title" name="title" type="text" class="form-control mb-2" placeholder="Title">
+    <form th:action="@{'/articles/' + ${article.getLink()} + '/edit'}" th:method="PATCH" enctype="multipart/form-data">
+        <input id="title" name="title" type="text" class="form-control mb-2" placeholder="Title"
+               th:value="${article.getTitle()}">
         <input id="thumbnail" name="thumbnail" class="form-control mb-4" type="file" accept=".jpg, .jpeg, .png, .webp">
-        <textarea id="content" name="content"></textarea>
+        <textarea id="content" name="content" th:text="${article.getContent()}"></textarea>
         <div dir="rtl">
             <button class="btn btn-primary btn-lg mt-1" type="submit" id="button">Submit</button>
         </div>

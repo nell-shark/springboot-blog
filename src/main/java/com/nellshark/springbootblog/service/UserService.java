@@ -29,42 +29,42 @@ public class UserService implements UserDetailsService {
     }
 
     public User getUserById(Long id) {
-        log.info("Find a user by id: " + id);
+        log.info("Getting a user by id: " + id);
         return userRepository
                 .findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with id='%s' wasn't found".formatted(id)));
     }
 
     public User getUserByEmail(String email) {
-        log.info("Find a user by email: " + email);
+        log.info("Getting a user by email: " + email);
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User with email='%s' wasn't found".formatted(email)));
     }
 
     public List<User> getAllUsers() {
-        log.info("Find all users");
+        log.info("Getting all users");
         return userRepository.findAll();
     }
 
     public List<User> getAllAdmins() {
-        log.info("Find all admins");
+        log.info("Getting all admins");
         return userRepository.findByRole(UserRole.ROLE_ADMIN);
     }
 
     public List<User> getAllModerators() {
-        log.info("Find all moderators");
+        log.info("Getting all moderators");
         return userRepository.findByRole(UserRole.ROLE_MODERATOR);
     }
 
     public User saveUser(User user) {
-        log.info("Save the user in the db: " + user);
+        log.info("Saving the user in the db: " + user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     public void updateEmail(String newEmail, User user) {
-        log.info("Update the user's email: " + user);
+        log.info("Updating the user's email: " + user);
         if (user.getEmail().equals(newEmail)) return;
 
         user.setEmail(newEmail);
@@ -72,7 +72,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void updatePassword(String newPassword, User user) {
-        log.info("Update the user's password: " + user);
+        log.info("Updating the user's password: " + user);
         String encodedPassword = passwordEncoder.encode(newPassword);
         if (user.getPassword().equals(encodedPassword)) return;
 
@@ -81,9 +81,14 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateAvatar(MultipartFile file, User user) throws IOException {
-        log.info("Update the user's avatar: " + user);
+        log.info("Updating the user's avatar: " + user);
         String fileName = FileUtils.saveUserAvatar(file, user);
         user.setAvatar(fileName);
         userRepository.save(user);
+    }
+
+    public void deleteUserById(Long id) {
+        log.info("Deleting the User by Id: " + id);
+        userRepository.deleteById(id);
     }
 }

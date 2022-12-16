@@ -76,13 +76,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}/edit")
-    @PreAuthorize("#id.equals(authentication.principal.id)")
+    @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
     public String getEditPage(@PathVariable("id") Long id) {
         return TEMPLATES_FOLDER + "edit";
     }
 
     @PostMapping("/{id}/edit")
-    @PreAuthorize("#id.equals(authentication.principal.id)")
+    @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
     public String updateEmailAndPassword(@PathVariable("id") Long id,
                                          @RequestParam("email") String email,
                                          @RequestParam("password") String password,
@@ -93,7 +93,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/edit/avatar")
-    @PreAuthorize("#id.equals(authentication.principal.id)")
+    @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
     public String uploadUserAvatar(@PathVariable("id") Long id,
                                    @RequestParam("image") MultipartFile image,
                                    @AuthenticationPrincipal User user) throws IOException {
@@ -101,7 +101,21 @@ public class UserController {
         return "redirect:/" + "users/" + id;
     }
 
-    public void authenticateUserAndSetSession(String username, HttpServletRequest request) {
+    @DeleteMapping("/{id}/delete")
+    @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
+    public String deleteUser(@PathVariable("id") Long id,
+                             @AuthenticationPrincipal User user,
+                             HttpServletRequest request,
+                             HttpServletResponse response) throws IOException {
+        // TODO: check admin
+
+        userService.deleteUserById(id);
+
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) return "redirect:/users/list";
+        return "redirect:/";
+    }
+
+    private void authenticateUserAndSetSession(String username, HttpServletRequest request) {
         request.getSession();
         UserDetails user = userService.loadUserByUsername(username);
         Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

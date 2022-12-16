@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <div th:replace="blocks/head :: head"></div>
@@ -18,18 +18,18 @@
     </div>
 </div>
 
-<div th:if="${user != null} OR ${!comments.isEmpty()}" class="d-flex justify-content-center">
+<div th:if="${user != null} OR ${!article.getComments().isEmpty()}" class="d-flex justify-content-center">
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-0 border" style="background-color: #f0f2f5;">
             <div class="card-body p-4">
-                <div sec:authorize="isAuthenticated()" class="form-outline mb-4" onSubmit="window.location.reload()">
+                <div sec:authorize="isAuthenticated()" class="form-outline mb-4">
                     <form th:action="@{'/articles/'+${article.getLink()}+'/add-comment'}" method="POST">
                         <input type="text" id="comment" name="comment" class="form-control"
                                placeholder="Add a comment"/>
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     </form>
                 </div>
-                <div th:each="comment : ${comments}" th:remove="tag">
+                <div th:each="comment : ${article.getComments()}" th:remove="tag">
                     <div class="card mb-4">
                         <div class="card-body">
                             <p th:text="${comment.getContent()}"></p>
