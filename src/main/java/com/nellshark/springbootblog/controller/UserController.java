@@ -2,7 +2,6 @@ package com.nellshark.springbootblog.controller;
 
 import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.model.UserRole;
-import com.nellshark.springbootblog.service.CommentService;
 import com.nellshark.springbootblog.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +14,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 
 @Controller
@@ -29,42 +34,33 @@ import java.io.IOException;
 @Slf4j
 public class UserController {
     private final UserService userService;
-    private final CommentService commentService;
-    private final String TEMPLATES_FOLDER = "users" + File.separator;
+    private final String USER_TEMPLATES = "/users";
 
     @GetMapping("/sign-up")
-    public String getSignUpPage() {
-        return TEMPLATES_FOLDER + "sign-up";
+    public String getSignUpPage(Model model) {
+        model.addAttribute("newUser", new User());
+        return USER_TEMPLATES + "/sign-up";
     }
 
     @PostMapping("/sign-up")
-    public String createNewUser(@RequestParam String email,
-                                @RequestParam String password,
+    public String createNewUser(@ModelAttribute(name = "newUser") User user,
                                 HttpServletRequest request) {
-        User user = userService.saveUser(new User(email, password));
-        authenticateUserAndSetSession(user.getUsername(), request);
+        User usr = userService.saveUser(user);
+        authenticateUserAndSetSession(usr.getUsername(), request);
         return "redirect:/";
     }
 
     @GetMapping("/sign-in")
     public String getSignInPage() {
-        return TEMPLATES_FOLDER + "sign-in";
+        return USER_TEMPLATES + "/sign-in";
     }
-
-    @GetMapping("/sign-out")
-    public String signOut(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) new SecurityContextLogoutHandler().logout(request, response, auth);
-        return "redirect:/";
-    }
-
 
     @GetMapping("/{id}")
     public String getUserPage(@PathVariable("id") Long id, Model model) {
         User userById = userService.getUserById(id);
         model.addAttribute("userById", userById);
-        model.addAttribute("comments", commentService.getAllCommentsByUser(userById));
-        return TEMPLATES_FOLDER + "id";
+        model.addAttribute("comments", userById.getComments());
+        return USER_TEMPLATES + "/id";
     }
 
     @GetMapping("/list")
@@ -72,33 +68,30 @@ public class UserController {
     public String getListOfUsersPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", UserRole.values());
-        return TEMPLATES_FOLDER + "list";
+        return USER_TEMPLATES + "/list";
     }
 
     @GetMapping("/{id}/edit")
     @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
-    public String getEditPage(@PathVariable("id") Long id) {
-        return TEMPLATES_FOLDER + "edit";
+    public String getEditPage(@PathVariable("id") Long id, Model model) {
+        return USER_TEMPLATES + "/edit";
     }
 
-    @PostMapping("/{id}/edit")
+    @PatchMapping("/{id}/edit")
     @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
-    public String updateEmailAndPassword(@PathVariable("id") Long id,
-                                         @RequestParam("email") String email,
-                                         @RequestParam("password") String password,
-                                         @AuthenticationPrincipal User user) {
-        userService.updateEmail(email, user);
-        userService.updatePassword(password, user);
-        return "redirect:/" + "users/" + id;
+    public String updateUser(@PathVariable("id") Long id,
+                             @RequestParam("email") String email,
+                             @RequestParam("password") String password,
+                             @RequestParam(value = "avatar", required = false) MultipartFile avatar) throws IOException {
+        userService.updateUser(id, email, password, avatar);
+        return "redirect:/";
     }
 
-    @PostMapping("/{id}/edit/avatar")
-    @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
-    public String uploadUserAvatar(@PathVariable("id") Long id,
-                                   @RequestParam("image") MultipartFile image,
-                                   @AuthenticationPrincipal User user) throws IOException {
-        userService.updateAvatar(image, user);
-        return "redirect:/" + "users/" + id;
+    @GetMapping("/sign-out")
+    public String signOut(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) new SecurityContextLogoutHandler().logout(request, response, auth);
+        return "redirect:/";
     }
 
     @DeleteMapping("/{id}/delete")

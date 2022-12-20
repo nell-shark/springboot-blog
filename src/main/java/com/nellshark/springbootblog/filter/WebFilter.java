@@ -4,19 +4,17 @@ import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
 import com.nellshark.springbootblog.wrapper.CharResponseWrapper;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Configuration
 public class WebFilter implements Filter {
-    private FilterConfig config;
-
-    public void init(FilterConfig config) {
-        this.config = config;
-    }
-
     @Override
     public void doFilter(ServletRequest servletRequest,
                          ServletResponse servletResponse,
@@ -36,9 +34,5 @@ public class WebFilter implements Filter {
                 servletResponse.getWriter().write(htmlCompressor.compress(text));
             }
         }
-    }
-
-    public FilterConfig getConfig() {
-        return config;
     }
 }

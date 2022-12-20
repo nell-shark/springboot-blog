@@ -1,57 +1,54 @@
 package com.nellshark.springbootblog.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Setter
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "comments")
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
+    @NonNull
     @ManyToOne
     private Article article;
 
+    @NonNull
     @ManyToOne
     private User user;
 
+    @NonNull
     @Column(name = "content")
     private String content;
 
-    @Column(name = "published")
-    private LocalDate published;
-
-    public Comment(Article article, User user, String content) {
-        this.article = article;
-        this.user = user;
-        this.content = content;
-        this.published = LocalDate.now();
-    }
-
-    public Comment(Article article, User user, String content, LocalDate published) {
-        this.article = article;
-        this.user = user;
-        this.content = content;
-        this.published = published;
-    }
+    @Column(name = "local_date")
+    private LocalDate localDate = LocalDate.now();
 
     @Override
     public String toString() {
         return "Comment{" +
                 "id=" + id +
-                ", article.id=" + article.getId() +
-                ", user.id=" + user.getId() +
-                ", content='" + content + '\'' +
-                ", published=" + published +
+                ", article.title=" + article.getTitle() +
+                ", user.email=" + user.getEmail() +
+                ", content=[" + content + "]" +
+                ", localDate=" + localDate +
                 '}';
     }
 }

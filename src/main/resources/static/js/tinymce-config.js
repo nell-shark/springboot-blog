@@ -6,18 +6,20 @@ tinymce.init({
     toolbar: "undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | image | code",
     images_upload_url: "/articles/upload-image",
     images_upload_handler: imageUploadHandler,
-    image_dimensions: false,
-    // content_style: 'img {width: 100%; height: 100%}',
-    // height: '100%'
+    image_dimensions: false
 });
 
 
 function imageUploadHandler(blobInfo, success, failure, progress) {
+
     var xhr, formData;
 
     xhr = new XMLHttpRequest();
     xhr.withCredentials = false;
-    xhr.open("POST", "/articles/upload-image");
+
+    const url = "/articles/" + id + "/upload/image";
+
+    xhr.open("POST", url);
 
     xhr.upload.onprogress = function (e) {
         progress(e.loaded / e.total * 100);

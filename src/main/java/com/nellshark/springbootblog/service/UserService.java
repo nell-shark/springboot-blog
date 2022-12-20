@@ -4,7 +4,6 @@ import com.nellshark.springbootblog.exception.UserNotFoundException;
 import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.model.UserRole;
 import com.nellshark.springbootblog.repository.UserRepository;
-import com.nellshark.springbootblog.utils.FileUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +14,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+
+import static com.nellshark.springbootblog.model.UserRole.ROLE_ADMIN;
+import static com.nellshark.springbootblog.model.UserRole.ROLE_MODERATOR;
+import static com.nellshark.springbootblog.utils.FileUtils.APP_LOCATION;
+import static com.nellshark.springbootblog.utils.FileUtils.STORAGE_FOLDER;
+import static com.nellshark.springbootblog.utils.FileUtils.getNewFileName;
+import static com.nellshark.springbootblog.utils.FileUtils.saveMultipartFile;
 
 @Service
 @AllArgsConstructor
@@ -30,16 +36,18 @@ public class UserService implements UserDetailsService {
 
     public User getUserById(Long id) {
         log.info("Getting a user by id: " + id);
-        return userRepository
-                .findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with id='%s' wasn't found".formatted(id)));
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> user.getId().equals(id))
+                .findFirst().orElseThrow(() -> new UserNotFoundException("User with id='%s' wasn't found".formatted(id)));
     }
 
     public User getUserByEmail(String email) {
         log.info("Getting a user by email: " + email);
-        return userRepository
-                .findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User with email='%s' wasn't found".formatted(email)));
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst().orElseThrow(() -> new UserNotFoundException("User with email='%s' wasn't found".formatted(email)));
     }
 
     public List<User> getAllUsers() {
@@ -49,42 +57,53 @@ public class UserService implements UserDetailsService {
 
     public List<User> getAllAdmins() {
         log.info("Getting all admins");
-        return userRepository.findByRole(UserRole.ROLE_ADMIN);
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> user.getRole().equals(ROLE_ADMIN)).toList();
     }
 
     public List<User> getAllModerators() {
         log.info("Getting all moderators");
-        return userRepository.findByRole(UserRole.ROLE_MODERATOR);
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> user.getRole().equals(ROLE_MODERATOR)).toList();
     }
 
     public User saveUser(User user) {
         log.info("Saving the user in the db: " + user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(UserRole.ROLE_USER);
         return userRepository.save(user);
     }
 
-    public void updateEmail(String newEmail, User user) {
-        log.info("Updating the user's email: " + user);
-        if (user.getEmail().equals(newEmail)) return;
+    public void updateUser(Long id, String email, String password, MultipartFile file) throws IOException {
+        log.info("Updating the user with id: " + id);
+        User user = getUserById(id);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        if (file != null && !file.isEmpty()) {
+            String avatar = saveUserAvatar(file, id);
+            user.setAvatar(avatar);
+        }
 
-        user.setEmail(newEmail);
         userRepository.save(user);
     }
 
-    public void updatePassword(String newPassword, User user) {
-        log.info("Updating the user's password: " + user);
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        if (user.getPassword().equals(encodedPassword)) return;
+    public String saveUserAvatar(MultipartFile file, Long id) throws IOException {
+        log.info("Saving the User's Avatar: " + file.getOriginalFilename());
 
-        user.setPassword(encodedPassword);
-        userRepository.save(user);
-    }
+        String newFileName = getNewFileName(file.getOriginalFilename());
 
-    public void updateAvatar(MultipartFile file, User user) throws IOException {
-        log.info("Updating the user's avatar: " + user);
-        String fileName = FileUtils.saveUserAvatar(file, user);
-        user.setAvatar(fileName);
-        userRepository.save(user);
+        final String USERS_STORAGE_FOLDER = STORAGE_FOLDER + "/users";
+
+        String filePath = APP_LOCATION
+                + USERS_STORAGE_FOLDER + "/"
+                + id + "/"
+                + newFileName;
+
+        saveMultipartFile(file, filePath);
+
+        return USERS_STORAGE_FOLDER + "/" + id + "/" + newFileName;
     }
 
     public void deleteUserById(Long id) {

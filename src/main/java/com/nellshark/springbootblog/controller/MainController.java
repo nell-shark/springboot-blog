@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -25,12 +24,12 @@ public class MainController {
     private final ArticleService articleService;
     private final UserService userService;
 
-    @RequestMapping(value = {"/", "/index", "/main", "/home"}, method = RequestMethod.GET)
+    @GetMapping
     public String getIndexPage(@RequestParam(value = "search", required = false) String search,
                                Model model) {
         List<Article> articles = StringUtils.isEmpty(search)
                 ? articleService.getAllArticles()
-                : articleService.searchArticle(search);
+                : articleService.getArticleByContent(search);
 
         model.addAttribute("search", search);
         model.addAttribute("articles", articles);
@@ -42,7 +41,7 @@ public class MainController {
         List<User> admins = userService.getAllAdmins();
         List<User> moderators = userService.getAllModerators();
 
-        model.addAttribute("users", ListUtils.union(admins, moderators));
+        model.addAttribute("authorities", ListUtils.union(admins, moderators));
         return "contact-us";
     }
 }

@@ -18,7 +18,7 @@
                         <div class="row justify-content-center">
                             <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Edit</p>
-                                <form method="POST" th:action="@{'/users/'+${user.getId()}+'/edit'}"
+                                <form th:method="PATCH" th:action="@{'/users/'+${user.getId()}+'/edit'}"
                                       class="mx-1 mx-md-4">
 
                                     <div class="d-flex flex-row align-items-center mb-4">
@@ -42,8 +42,6 @@
                                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                                         <button type="submit" class="btn btn-primary btn-lg">Update</button>
                                     </div>
-
-                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                                 </form>
 
                             </div>
@@ -51,12 +49,8 @@
                                 <img th:src="${user.getAvatar().orElse('/images/avatar.svg')}" alt="Avatar"
                                      class="h-100 img-fluid">
                                 <div class="mt-3">
-                                    <form method="POST" th:action="@{'/users/'+${user.getId()}+'/edit/avatar'}"
-                                          enctype="multipart/form-data"
-                                          class="mx-1 mx-md-4">
-                                        <input class="form-control" type="file" id="image" name="image"
-                                               onchange="this.form.submit()" accept=".jpg, .jpeg, .png, .webp">
-                                    </form>
+                                    <input class="form-control" type="file" id="avatar" name="avatar"
+                                           accept=".jpg, .jpeg, .png, .webp">
                                 </div>
                             </div>
                         </div>

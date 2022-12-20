@@ -8,26 +8,26 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @AllArgsConstructor
 @Slf4j
 public class CommentService {
     private final CommentRepository commentRepository;
 
-    public List<Comment> getAllCommentsByArticle(Article article) {
-        log.info("Get all comments by Article " + article);
-        return commentRepository.findByArticle(article);
+    public void saveComment(Comment comment) {
+        log.info("Saving the comment in db:" + comment);
+        commentRepository.save(comment);
     }
 
-    public List<Comment> getAllCommentsByUser(User user) {
-        log.info("Get all comments by User " + user);
-        return commentRepository.findByUser(user);
-    }
+    public void saveComment(Article article, User user, String content) {
+        log.info("Creating the comment to save: " + content);
 
-    public Comment saveComment(Comment comment) {
-        log.info("Save the comment in db" + comment);
-        return commentRepository.save(comment);
+        Comment comment = Comment.builder()
+                .article(article)
+                .user(user)
+                .content(content)
+                .build();
+
+        saveComment(comment);
     }
 }

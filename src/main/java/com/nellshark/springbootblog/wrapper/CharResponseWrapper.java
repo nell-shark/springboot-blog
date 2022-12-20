@@ -9,10 +9,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class CharResponseWrapper extends HttpServletResponseWrapper {
-    protected CharArrayWriter charWriter;
-    protected PrintWriter writer;
-    protected boolean getOutputStreamCalled;
-    protected boolean getWriterCalled;
+    private final CharArrayWriter charWriter;
+    private PrintWriter writer;
+    private boolean getOutputStreamCalled;
+    private boolean getWriterCalled;
 
     public CharResponseWrapper(HttpServletResponse response) {
         super(response);

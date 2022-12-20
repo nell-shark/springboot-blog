@@ -5,11 +5,18 @@ import com.nellshark.springbootblog.model.Article;
 import com.nellshark.springbootblog.repository.ArticleRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
+import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
+
+import static com.nellshark.springbootblog.utils.FileUtils.APP_LOCATION;
+import static com.nellshark.springbootblog.utils.FileUtils.STORAGE_FOLDER;
+import static com.nellshark.springbootblog.utils.FileUtils.getNewFileName;
+import static com.nellshark.springbootblog.utils.FileUtils.saveMultipartFile;
 
 @Service
 @AllArgsConstructor
@@ -19,22 +26,19 @@ public class ArticleService {
 
     public List<Article> getAllArticles() {
         log.info("Getting all articles");
-        return articleRepository
-                .findAll(Sort.by(Sort.Direction.DESC, "published"));
+        return articleRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Article::getLocalDate).reversed())
+                .toList();
     }
 
-    public Article getArticleById(Long id) {
+    public Article getArticleById(UUID id) {
         log.info("Getting an article by id: " + id);
-        return articleRepository
-                .findById(id)
+        return articleRepository.findAll()
+                .stream()
+                .filter(article -> article.getId().equals(id))
+                .findFirst()
                 .orElseThrow(() -> new ArticleNotFoundException("Article with id='%s' not found".formatted(id)));
-    }
-
-    public Article getArticleByTitle(String title) {
-        log.info("Getting an article by title: " + title);
-        return articleRepository
-                .findByTitle(title)
-                .orElseThrow(() -> new ArticleNotFoundException("Article with title='%s' not found".formatted(title)));
     }
 
     public Article getArticleByLink(String link) {
@@ -46,33 +50,48 @@ public class ArticleService {
                 .orElseThrow(() -> new ArticleNotFoundException("Article with link='%s' not found".formatted(link)));
     }
 
-    public List<Article> searchArticle(String search) {
-        log.info("Searching an article (%s)".formatted(search));
+    public List<Article> getArticleByContent(String search) {
+        log.info("Searching an article: " + search);
         return articleRepository.search(search);
     }
 
-    public void saveArticle(Article article) {
+    public Article saveArticle(Article article) {
         log.info("Saving the article in db: " + article);
-        if (article.getPublished() == null) {
-            article.setPublished(LocalDate.now());
+        return articleRepository.save(article);
+    }
+
+    public Article saveArticle(UUID id, String title, String content, MultipartFile file) throws IOException {
+        log.info("Creating or Updating an article to save: " + id);
+        Article article = Article.builder()
+                .id(id)
+                .title(title)
+                .content(content)
+                .build();
+
+        if (file != null && !file.isEmpty()) {
+            String image = saveArticleImage(file, id);
+            article.setThumbnail(image);
         }
-        articleRepository.save(article);
+
+        return saveArticle(article);
     }
 
-    public void updateArticle(String link, Article updatedArticle) {
-        log.info("Updating article with link: " + link);
-        Article articleById = getArticleByLink(link);
-        articleById.setTitle(updatedArticle.getTitle());
-        if (updatedArticle.getThumbnail() != null)
-            articleById.setThumbnail(updatedArticle.getThumbnail());
-        articleById.setContent(updatedArticle.getContent());
 
-        articleRepository.save(articleById);
-    }
+    public String saveArticleImage(MultipartFile file, UUID id) throws IOException {
+        log.info("Saving the Article's Image: " + file.getOriginalFilename());
 
-    public Long getNextSeriesId() {
-        log.info("Getting id of the new article");
-        return articleRepository.getMaxId() + 1L;
+        String newFileName = getNewFileName(file.getOriginalFilename());
+
+        final String ARTICLES_STORAGE_FOLDER = STORAGE_FOLDER + "/articles";
+
+        String filePath = APP_LOCATION
+                + ARTICLES_STORAGE_FOLDER + "/"
+                + id + "/"
+                + newFileName;
+
+        saveMultipartFile(file, filePath);
+
+        return ARTICLES_STORAGE_FOLDER + "/" + id + "/" + newFileName;
     }
 
     public void deleteAllArticles() {

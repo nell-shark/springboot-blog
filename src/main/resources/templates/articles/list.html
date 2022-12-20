@@ -26,10 +26,10 @@
                     <a th:href="@{'/articles/' + ${article.getLink()}}"
                        class="nav-link" th:text="${article.getTitle()}">Edit</a>
                 </td>
-                <td th:text="${article.getPublished()}"></td>
-                <td><a th:href="@{'/articles/' + ${article.getLink()} + '/edit'}" type="button"
+                <td th:text="${article.getLocalDate()}"></td>
+                <td><a th:href="@{'/articles/' + ${article.getId()} + '/edit'}" type="button"
                        class="btn btn-outline-primary">Edit</a></td>
-                <td><a th:href="@{'/articles/' + ${article.getLink()} + '/delete'}" type="button"
+                <td><a th:href="@{'/articles/' + ${article.getId()} + '/delete'}" type="button"
                        class="btn btn-outline-danger">Delete</a></td>
             </tr>
         </div>

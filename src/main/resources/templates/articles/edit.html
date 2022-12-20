@@ -12,7 +12,7 @@
 <div th:insert="blocks/header :: header" th:remove="tag"></div>
 
 <div class="container h-100 mt-4">
-    <form th:action="@{'/articles/' + ${article.getLink()} + '/edit'}" th:method="PATCH" enctype="multipart/form-data">
+    <form th:action="@{'/articles/' + ${id} + '/edit'}" th:method="PATCH" enctype="multipart/form-data">
         <input id="title" name="title" type="text" class="form-control mb-2" placeholder="Title"
                th:value="${article.getTitle()}">
         <input id="thumbnail" name="thumbnail" class="form-control mb-4" type="file" accept=".jpg, .jpeg, .png, .webp">
@@ -20,7 +20,6 @@
         <div dir="rtl">
             <button class="btn btn-primary btn-lg mt-1" type="submit" id="button">Submit</button>
         </div>
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     </form>
 </div>
 
