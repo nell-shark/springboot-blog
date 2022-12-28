@@ -34,7 +34,7 @@ import java.io.IOException;
 @Slf4j
 public class UserController {
     private final UserService userService;
-    private final String USER_TEMPLATES = "/users";
+    private final String USER_TEMPLATES = "users";
 
     @GetMapping("/sign-up")
     public String getSignUpPage(Model model) {

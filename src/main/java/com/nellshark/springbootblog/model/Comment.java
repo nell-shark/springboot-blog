@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -38,8 +38,8 @@ public class Comment {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "local_date")
-    private LocalDate localDate = LocalDate.now();
+    @Column(name = "local_date_time")
+    private LocalDateTime localDateTime = LocalDateTime.now();
 
     @Override
     public String toString() {
@@ -48,7 +48,7 @@ public class Comment {
                 ", article.title=" + article.getTitle() +
                 ", user.email=" + user.getEmail() +
                 ", content=[" + content + "]" +
-                ", localDate=" + localDate +
+                ", localDateTime=" + localDateTime +
                 '}';
     }
 }

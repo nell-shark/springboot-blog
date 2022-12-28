@@ -9,12 +9,13 @@
 
 <body class="sign">
 
-<main class="form-sign w-100 m-auto">
-    <img class="mb-4" src="/images/favicon.svg" width="200" height="200">
-    <h1 class="h3 mb-3 fw-normal">Please Sign up</h1>
+<main class="sign-form  w-100 m-auto">
     <form method="POST" th:action="@{/users/sign-up}" th:object="${newUser}">
+        <img class="mb-4" src="/images/favicon.svg" width="200" height="200">
+        <h1 class="h3 mb-3 fw-normal">Please Sign up</h1>
+
         <div class="form-floating">
-            <input type="email" class="form-control " id="login" placeholder="name@example.com"
+            <input type="email" class="form-control" id="login" placeholder="name@example.com"
                    th:field="*{email}">
             <label for="login">Email address</label>
         </div>

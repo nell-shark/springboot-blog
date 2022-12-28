@@ -28,7 +28,7 @@ public class ArticleService {
         log.info("Getting all articles");
         return articleRepository.findAll()
                 .stream()
-                .sorted(Comparator.comparing(Article::getLocalDate).reversed())
+                .sorted(Comparator.comparing(Article::getLocalDateTime).reversed())
                 .toList();
     }
 
@@ -50,7 +50,7 @@ public class ArticleService {
                 .orElseThrow(() -> new ArticleNotFoundException("Article with link='%s' not found".formatted(link)));
     }
 
-    public List<Article> getArticleByContent(String search) {
+    public List<Article> searchForArticleByTitleOrContent(String search) {
         log.info("Searching an article: " + search);
         return articleRepository.search(search);
     }

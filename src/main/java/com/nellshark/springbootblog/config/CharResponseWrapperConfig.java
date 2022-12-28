@@ -1,5 +1,6 @@
-package com.nellshark.springbootblog.wrapper;
+package com.nellshark.springbootblog.config;
 
+import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -8,13 +9,14 @@ import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class CharResponseWrapper extends HttpServletResponseWrapper {
+@Configuration
+public class CharResponseWrapperConfig extends HttpServletResponseWrapper {
     private final CharArrayWriter charWriter;
     private PrintWriter writer;
     private boolean getOutputStreamCalled;
     private boolean getWriterCalled;
 
-    public CharResponseWrapper(HttpServletResponse response) {
+    public CharResponseWrapperConfig(HttpServletResponse response) {
         super(response);
 
         charWriter = new CharArrayWriter();

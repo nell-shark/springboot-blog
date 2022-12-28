@@ -29,7 +29,7 @@ public class MainController {
                                Model model) {
         List<Article> articles = StringUtils.isEmpty(search)
                 ? articleService.getAllArticles()
-                : articleService.getArticleByContent(search);
+                : articleService.searchForArticleByTitleOrContent(search);
 
         model.addAttribute("search", search);
         model.addAttribute("articles", articles);

@@ -32,7 +32,7 @@ import java.util.UUID;
 public class ArticleController {
     private final ArticleService articleService;
     private final CommentService commentService;
-    private final String ARTICLE_TEMPLATES = "/articles";
+    private final String ARTICLE_TEMPLATES = "articles";
 
     @GetMapping("/create")
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")

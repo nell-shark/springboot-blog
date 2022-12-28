@@ -26,7 +26,7 @@
                     <a th:href="@{'/articles/' + ${article.getLink()}}"
                        class="nav-link" th:text="${article.getTitle()}">Edit</a>
                 </td>
-                <td th:text="${article.getLocalDate()}"></td>
+                <td th:text="${#temporals.format(article.getLocalDateTime(), 'HH:mm dd/MM/yyyy')}"></td>
                 <td><a th:href="@{'/articles/' + ${article.getId()} + '/edit'}" type="button"
                        class="btn btn-outline-primary">Edit</a></td>
                 <td><a th:href="@{'/articles/' + ${article.getId()} + '/delete'}" type="button"

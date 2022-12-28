@@ -6,12 +6,12 @@ tinymce.init({
     toolbar: "undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | image | code",
     images_upload_url: "/articles/upload-image",
     images_upload_handler: imageUploadHandler,
-    image_dimensions: false
+    image_dimensions: false,
+    content_style: 'img {max-width: 100%}'
 });
 
 
 function imageUploadHandler(blobInfo, success, failure, progress) {
-
     var xhr, formData;
 
     xhr = new XMLHttpRequest();

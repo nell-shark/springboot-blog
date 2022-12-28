@@ -1,7 +1,6 @@
-package com.nellshark.springbootblog.filter;
+package com.nellshark.springbootblog.config;
 
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
-import com.nellshark.springbootblog.wrapper.CharResponseWrapper;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
@@ -14,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Configuration
-public class WebFilter implements Filter {
+public class WebFilterConfig implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest,
                          ServletResponse servletResponse,
@@ -22,12 +21,12 @@ public class WebFilter implements Filter {
         ServletResponse newResponse = servletResponse;
 
         if (servletRequest instanceof HttpServletRequest) {
-            newResponse = new CharResponseWrapper((HttpServletResponse) servletResponse);
+            newResponse = new CharResponseWrapperConfig((HttpServletResponse) servletResponse);
         }
 
         filterChain.doFilter(servletRequest, newResponse);
 
-        if (newResponse instanceof CharResponseWrapper) {
+        if (newResponse instanceof CharResponseWrapperConfig) {
             String text = newResponse.toString();
             if (text != null) {
                 HtmlCompressor htmlCompressor = new HtmlCompressor();

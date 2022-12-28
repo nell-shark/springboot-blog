@@ -11,17 +11,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@TestPropertySource("/application-test.properties")
 @SpringBootTest
 @AutoConfigureMockMvc
 class MainControllerTest {
@@ -41,9 +44,13 @@ class MainControllerTest {
 
     @Test
     void checkMainPageHasArticle() throws Exception {
-        String title = "title";
-        Article article = new Article(title, null, "text");
-        when(articleService.getAllArticles()).thenReturn(List.of(article));
+        final String title = "title";
+        Article article = Article.builder()
+                .id(UUID.randomUUID())
+                .title(title)
+                .content("")
+                .build();
+        given(articleService.getAllArticles()).willReturn(List.of(article));
 
         mockMvc.perform(get("/"))
                 .andDo(print())
@@ -52,26 +59,44 @@ class MainControllerTest {
     }
 
     @Test
-    void checkAboutPageHasAdmin() throws Exception {
-        String email = "test@gmail.com";
-        User user = new User(email, "password");
-        user.setRole(UserRole.ROLE_ADMIN);
-        when(appUserService.getAllAdmins()).thenReturn(List.of(user));
+    void checkContactUsPageHasAdminAndModerator() throws Exception {
+        String adminEmail = "admin@gmail.com";
+        User admin = User.builder()
+                .email(adminEmail)
+                .password("")
+                .role(UserRole.ROLE_ADMIN)
+                .build();
+
+        String moderatorEmail = "admin@gmail.com";
+        User moderator = User.builder()
+                .email(adminEmail)
+                .password("")
+                .role(UserRole.ROLE_ADMIN)
+                .build();
+
+        given(appUserService.getAllAdmins()).willReturn(List.of(admin, moderator));
 
         mockMvc.perform(get("/contact-us"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(email)));
+                .andExpect(content().string(containsString(adminEmail)))
+                .andExpect(content().string(containsString(moderatorEmail)));
     }
 
     @Test
     void testSearchArticles() throws Exception {
-        String text = "text";
-        when(articleService.searchArticle(text)).thenReturn(List.of(new Article("Title", null, text)));
+        String title = "title";
+        Article article = Article.builder()
+                .id(UUID.randomUUID())
+                .title(title)
+                .content("")
+                .build();
 
-        mockMvc.perform(get("/").param("search", text))
+        given(articleService.searchForArticleByTitleOrContent(title)).willReturn(List.of(article));
+
+        mockMvc.perform(get("/").param("search", title))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(text)));
+                .andExpect(content().string(containsString(title)));
     }
 }

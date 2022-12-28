@@ -16,7 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -32,6 +32,7 @@ import java.util.UUID;
 public class Article {
     @Id
     @Column(name = "id")
+    @NonNull
     private UUID id;
 
     @NonNull
@@ -43,12 +44,12 @@ public class Article {
     @Column(name = "content")
     private String content;
 
-    @Builder.Default
-    @Column(name = "local_date")
-    private LocalDate localDate = LocalDate.now();
-
     @Column(name = "thumbnail")
     private String thumbnail;
+
+    @Builder.Default
+    @Column(name = "local_date_time")
+    private LocalDateTime localDateTime = LocalDateTime.now();
 
     @ToString.Exclude
     @Transient
