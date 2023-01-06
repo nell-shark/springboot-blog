@@ -12,7 +12,7 @@
 <div th:insert="blocks/header :: header" th:remove="tag"></div>
 
 <div class="container h-100 mt-4">
-    <form th:action="@{'/articles/' + ${id} + '/edit'}" th:method="PATCH" enctype="multipart/form-data">
+    <form th:action="@{'/articles/edit' + ${id}}" th:method="PATCH" enctype="multipart/form-data">
         <input id="title" name="title" type="text" class="form-control mb-2" placeholder="Title"
                th:value="${article.getTitle()}">
         <input id="thumbnail" name="thumbnail" class="form-control mb-4" type="file" accept=".jpg, .jpeg, .png, .webp">

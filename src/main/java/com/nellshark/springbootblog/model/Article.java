@@ -2,10 +2,9 @@ package com.nellshark.springbootblog.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.CascadeType;
@@ -21,12 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Setter
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Table(name = "articles")
 public class Article {
@@ -56,12 +53,6 @@ public class Article {
     private String link;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Comment> comments = new ArrayList<>();
-
-    public String getLink() {
-        return getTitle()
-                .replaceAll("[._~:/?#@!$&'()*+,;=]", "")
-                .replace(" ", "-");
-    }
 }

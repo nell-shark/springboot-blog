@@ -50,7 +50,7 @@ public class ArticleService {
                 .orElseThrow(() -> new ArticleNotFoundException("Article with link='%s' not found".formatted(link)));
     }
 
-    public List<Article> searchForArticleByTitleOrContent(String search) {
+    public List<Article> doSearch(String search) {
         log.info("Searching an article: " + search);
         return articleRepository.search(search);
     }
@@ -92,6 +92,12 @@ public class ArticleService {
         saveMultipartFile(file, filePath);
 
         return ARTICLES_STORAGE_FOLDER + "/" + id + "/" + newFileName;
+    }
+
+    public void deleteArticleById(UUID id) {
+        log.info("Deleting the article by id: " + id);
+        Article article = getArticleById(id);
+        articleRepository.delete(article);
     }
 
     public void deleteAllArticles() {

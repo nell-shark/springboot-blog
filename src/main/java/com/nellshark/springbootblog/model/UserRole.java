@@ -1,11 +1,15 @@
 package com.nellshark.springbootblog.model;
 
+import org.apache.commons.collections4.SetUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static com.nellshark.springbootblog.model.UserAuthority.*;
+import static com.nellshark.springbootblog.model.UserAuthority.CREATE_ARTICLES;
+import static com.nellshark.springbootblog.model.UserAuthority.DELETE_ARTICLES;
+import static com.nellshark.springbootblog.model.UserAuthority.EDIT_ARTICLES;
+import static com.nellshark.springbootblog.model.UserAuthority.WRITE_COMMENTS;
+import static java.util.stream.Collectors.toSet;
 
 public enum UserRole {
     ROLE_USER(Set.of(WRITE_COMMENTS)),
@@ -25,12 +29,9 @@ public enum UserRole {
     }
 
     public Set<SimpleGrantedAuthority> getAuthorities() {
-        Set<SimpleGrantedAuthority> permissions = getPermissions()
+        return SetUtils.union(getPermissions()
                 .stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.name()))
-                .collect(Collectors.toSet());
-        permissions.add(new SimpleGrantedAuthority(this.name()));
-        return permissions;
+                .collect(toSet()), Set.of(new SimpleGrantedAuthority(this.name())));
     }
 }
-

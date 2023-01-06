@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import static com.nellshark.springbootblog.model.UserRole.ROLE_ADMIN;
 import static com.nellshark.springbootblog.model.UserRole.ROLE_MODERATOR;
@@ -21,6 +22,7 @@ import static com.nellshark.springbootblog.utils.FileUtils.APP_LOCATION;
 import static com.nellshark.springbootblog.utils.FileUtils.STORAGE_FOLDER;
 import static com.nellshark.springbootblog.utils.FileUtils.getNewFileName;
 import static com.nellshark.springbootblog.utils.FileUtils.saveMultipartFile;
+import static java.util.stream.Collectors.toSet;
 
 @Service
 @AllArgsConstructor
@@ -55,18 +57,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public List<User> getAllAdmins() {
-        log.info("Getting all admins");
+    public Set<User> getAdminsAndModerators() {
+        log.info("Getting admins and moderators");
         return userRepository.findAll()
                 .stream()
-                .filter(user -> user.getRole().equals(ROLE_ADMIN)).toList();
-    }
-
-    public List<User> getAllModerators() {
-        log.info("Getting all moderators");
-        return userRepository.findAll()
-                .stream()
-                .filter(user -> user.getRole().equals(ROLE_MODERATOR)).toList();
+                .filter(user -> user.getRole().equals(ROLE_ADMIN) || user.getRole().equals(ROLE_MODERATOR))
+                .collect(toSet());
     }
 
     public User saveUser(User user) {
@@ -108,6 +104,7 @@ public class UserService implements UserDetailsService {
 
     public void deleteUserById(Long id) {
         log.info("Deleting the User by Id: " + id);
-        userRepository.deleteById(id);
+        User user = getUserById(id);
+        userRepository.delete(user);
     }
 }

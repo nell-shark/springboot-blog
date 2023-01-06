@@ -2,20 +2,20 @@ package com.nellshark.springbootblog.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,14 +24,15 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
-    @ManyToOne
+    @ManyToOne()
     private Article article;
 
     @NonNull
-    @ManyToOne
+    @ManyToOne()
     private User user;
 
     @NonNull
@@ -39,6 +40,7 @@ public class Comment {
     private String content;
 
     @Column(name = "local_date_time")
+    @Builder.Default
     private LocalDateTime localDateTime = LocalDateTime.now();
 
     @Override

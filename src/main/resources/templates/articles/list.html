@@ -29,8 +29,11 @@
                 <td th:text="${#temporals.format(article.getLocalDateTime(), 'HH:mm dd/MM/yyyy')}"></td>
                 <td><a th:href="@{'/articles/' + ${article.getId()} + '/edit'}" type="button"
                        class="btn btn-outline-primary">Edit</a></td>
-                <td><a th:href="@{'/articles/' + ${article.getId()} + '/delete'}" type="button"
-                       class="btn btn-outline-danger">Delete</a></td>
+                <td>
+                    <form th:method="DELETE" th:action="@{'/articles/delete'+${article.getId()}}">
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                    </form>
+                </td>
             </tr>
         </div>
     </table>

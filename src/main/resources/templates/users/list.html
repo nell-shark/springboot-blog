@@ -39,10 +39,10 @@
                         </div>
                     </select>
                 </td>
-                <td><a th:href="@{'/users/' + ${user.getId()} + '/edit'}" type="button"
+                <td><a th:href="@{'/users/edit' + ${user.getId()}}" type="button"
                        class="btn btn-outline-primary">Edit</a></td>
                 <td>
-                    <form th:action="@{'/users/' + ${user.getId()} + '/delete'}" th:method="DELETE">
+                    <form th:action="@{'/users/delete' + ${user.getId()}}" th:method="DELETE">
                         <button class="btn btn-outline-danger" type="submit">Delete</button>
                     </form>
                 </td>

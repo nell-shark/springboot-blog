@@ -15,6 +15,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.containsString;
@@ -74,7 +75,7 @@ class MainControllerTest {
                 .role(UserRole.ROLE_ADMIN)
                 .build();
 
-        given(appUserService.getAllAdmins()).willReturn(List.of(admin, moderator));
+        given(appUserService.getAdminsAndModerators()).willReturn(Set.of(admin, moderator));
 
         mockMvc.perform(get("/contact-us"))
                 .andDo(print())
@@ -84,7 +85,7 @@ class MainControllerTest {
     }
 
     @Test
-    void testSearchArticles() throws Exception {
+    void testDoSearchArticles() throws Exception {
         String title = "title";
         Article article = Article.builder()
                 .id(UUID.randomUUID())
@@ -92,7 +93,7 @@ class MainControllerTest {
                 .content("")
                 .build();
 
-        given(articleService.searchForArticleByTitleOrContent(title)).willReturn(List.of(article));
+        given(articleService.doSearch(title)).willReturn(List.of(article));
 
         mockMvc.perform(get("/").param("search", title))
                 .andDo(print())

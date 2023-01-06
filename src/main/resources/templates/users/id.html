@@ -43,7 +43,7 @@
                                        class="btn btn-outline-primary me-1 flex-grow-1">Chat</a>
                                     <a sec:authorize="isAuthenticated()"
                                        th:if="${#strings.equals({#authentication.name}, {userById.getEmail()})}"
-                                       th:href="@{'/users/' + ${userById.getId()} + '/edit'}"
+                                       th:href="@{'/users/edit' + ${userById.getId()}}"
                                        type="button" class="btn btn-outline-primary me-1 flex-grow-1">Edit</a>
                                 </div>
                             </div>

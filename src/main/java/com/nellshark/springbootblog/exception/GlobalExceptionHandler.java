@@ -42,6 +42,13 @@ public class GlobalExceptionHandler {
         return getModelAndView(Map.of("exception", exception.getMessage()));
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ModelAndView handleCommentNotFoundException(Exception exception) {
+        log.error(CommentNotFoundException.class.getName() + " Occurred: " + exception.getMessage());
+        return getModelAndView(Map.of("exception", exception.getMessage()));
+    }
+
     private ModelAndView getModelAndView(Map<String, Object> model) {
         return new ModelAndView("error", model);
     }

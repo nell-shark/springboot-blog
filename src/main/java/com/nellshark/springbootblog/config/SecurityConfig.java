@@ -21,6 +21,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //    @formatter:off
         http
+                .csrf().disable().httpBasic().and() // DELETE
                 .authorizeRequests()
                 .and()
                 .formLogin()

@@ -3,7 +3,7 @@ package com.nellshark.springbootblog.controller;
 import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.model.UserRole;
 import com.nellshark.springbootblog.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,7 +30,7 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping("/users")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class UserController {
     private final UserService userService;
@@ -71,13 +71,13 @@ public class UserController {
         return USER_TEMPLATES + "/list";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/edit/{id}")
     @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
     public String getEditPage(@PathVariable("id") Long id, Model model) {
         return USER_TEMPLATES + "/edit";
     }
 
-    @PatchMapping("/{id}/edit")
+    @PatchMapping("/edit/{id}")
     @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
     public String updateUser(@PathVariable("id") Long id,
                              @RequestParam("email") String email,
@@ -94,7 +94,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
     public String deleteUser(@PathVariable("id") Long id,
                              @AuthenticationPrincipal User user,
