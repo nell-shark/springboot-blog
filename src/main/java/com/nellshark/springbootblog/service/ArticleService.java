@@ -3,7 +3,7 @@ package com.nellshark.springbootblog.service;
 import com.nellshark.springbootblog.exception.ArticleNotFoundException;
 import com.nellshark.springbootblog.model.Article;
 import com.nellshark.springbootblog.repository.ArticleRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,16 +13,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-import static com.nellshark.springbootblog.utils.FileUtils.APP_LOCATION;
-import static com.nellshark.springbootblog.utils.FileUtils.STORAGE_FOLDER;
-import static com.nellshark.springbootblog.utils.FileUtils.getNewFileName;
-import static com.nellshark.springbootblog.utils.FileUtils.saveMultipartFile;
+import static com.nellshark.springbootblog.service.FileService.APP_LOCATION;
+import static com.nellshark.springbootblog.service.FileService.STORAGE_FOLDER;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final FileService fileService;
 
     public List<Article> getAllArticles() {
         log.info("Getting all articles");
@@ -39,15 +38,6 @@ public class ArticleService {
                 .filter(article -> article.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new ArticleNotFoundException("Article with id='%s' not found".formatted(id)));
-    }
-
-    public Article getArticleByLink(String link) {
-        log.info("Get an article by link: " + link);
-        return articleRepository.findAll()
-                .stream()
-                .filter(article -> article.getLink().equals(link))
-                .findFirst()
-                .orElseThrow(() -> new ArticleNotFoundException("Article with link='%s' not found".formatted(link)));
     }
 
     public List<Article> doSearch(String search) {
@@ -78,9 +68,9 @@ public class ArticleService {
 
 
     public String saveArticleImage(MultipartFile file, UUID id) throws IOException {
-        log.info("Saving the Article's Image: " + file.getOriginalFilename());
+        log.info("Saving the Article's Image");
 
-        String newFileName = getNewFileName(file.getOriginalFilename());
+        String newFileName = fileService.getNewFileName(file.getOriginalFilename());
 
         final String ARTICLES_STORAGE_FOLDER = STORAGE_FOLDER + "/articles";
 
@@ -89,7 +79,7 @@ public class ArticleService {
                 + id + "/"
                 + newFileName;
 
-        saveMultipartFile(file, filePath);
+        fileService.saveMultipartFile(file, filePath);
 
         return ARTICLES_STORAGE_FOLDER + "/" + id + "/" + newFileName;
     }

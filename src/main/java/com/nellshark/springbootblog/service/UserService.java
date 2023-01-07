@@ -4,7 +4,7 @@ import com.nellshark.springbootblog.exception.UserNotFoundException;
 import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.model.UserRole;
 import com.nellshark.springbootblog.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,18 +18,17 @@ import java.util.Set;
 
 import static com.nellshark.springbootblog.model.UserRole.ROLE_ADMIN;
 import static com.nellshark.springbootblog.model.UserRole.ROLE_MODERATOR;
-import static com.nellshark.springbootblog.utils.FileUtils.APP_LOCATION;
-import static com.nellshark.springbootblog.utils.FileUtils.STORAGE_FOLDER;
-import static com.nellshark.springbootblog.utils.FileUtils.getNewFileName;
-import static com.nellshark.springbootblog.utils.FileUtils.saveMultipartFile;
+import static com.nellshark.springbootblog.service.FileService.APP_LOCATION;
+import static com.nellshark.springbootblog.service.FileService.STORAGE_FOLDER;
 import static java.util.stream.Collectors.toSet;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class UserService implements UserDetailsService {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final FileService fileService;
 
     @Override
     public UserDetails loadUserByUsername(String email) {
@@ -41,7 +40,8 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll()
                 .stream()
                 .filter(user -> user.getId().equals(id))
-                .findFirst().orElseThrow(() -> new UserNotFoundException("User with id='%s' wasn't found".formatted(id)));
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException("User with id='%s' wasn't found".formatted(id)));
     }
 
     public User getUserByEmail(String email) {
@@ -49,7 +49,8 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll()
                 .stream()
                 .filter(user -> user.getEmail().equals(email))
-                .findFirst().orElseThrow(() -> new UserNotFoundException("User with email='%s' wasn't found".formatted(email)));
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException("User with email='%s' wasn't found".formatted(email)));
     }
 
     public List<User> getAllUsers() {
@@ -61,7 +62,7 @@ public class UserService implements UserDetailsService {
         log.info("Getting admins and moderators");
         return userRepository.findAll()
                 .stream()
-                .filter(user -> user.getRole().equals(ROLE_ADMIN) || user.getRole().equals(ROLE_MODERATOR))
+                .filter(user -> Set.of(ROLE_ADMIN, ROLE_MODERATOR).contains(user.getRole()))
                 .collect(toSet());
     }
 
@@ -88,7 +89,7 @@ public class UserService implements UserDetailsService {
     public String saveUserAvatar(MultipartFile file, Long id) throws IOException {
         log.info("Saving the User's Avatar: " + file.getOriginalFilename());
 
-        String newFileName = getNewFileName(file.getOriginalFilename());
+        String newFileName = fileService.getNewFileName(file.getOriginalFilename());
 
         final String USERS_STORAGE_FOLDER = STORAGE_FOLDER + "/users";
 
@@ -97,7 +98,7 @@ public class UserService implements UserDetailsService {
                 + id + "/"
                 + newFileName;
 
-        saveMultipartFile(file, filePath);
+        fileService.saveMultipartFile(file, filePath);
 
         return USERS_STORAGE_FOLDER + "/" + id + "/" + newFileName;
     }

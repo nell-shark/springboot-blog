@@ -5,14 +5,14 @@ import com.nellshark.springbootblog.model.Article;
 import com.nellshark.springbootblog.model.Comment;
 import com.nellshark.springbootblog.model.User;
 import com.nellshark.springbootblog.repository.CommentRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class CommentService {
     private final CommentRepository commentRepository;

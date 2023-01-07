@@ -9,7 +9,7 @@
 
 <section class="py-5 text-center container">
     <h1 class="fw-light" th:text="${article.getTitle()}"></h1>
-    <img th:src="${article.getThumbnail()}" class="w-100 h-50 rounded ">
+    <img th:src="${article.getThumbnail().get()}" class="w-100 h-50 rounded ">
 </section>
 
 <div class="container pb-4">
