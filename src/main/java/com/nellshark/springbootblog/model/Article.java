@@ -14,7 +14,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +49,6 @@ public class Article {
     @Builder.Default
     @Column(name = "local_date_time")
     private LocalDateTime localDateTime = LocalDateTime.now();
-
-    @ToString.Exclude
-    @Transient
-    private String link;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)

@@ -31,6 +31,7 @@ public class MainController {
 
         model.addAttribute("search", search);
         model.addAttribute("articles", articles);
+
         return "index";
     }
 

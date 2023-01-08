@@ -32,8 +32,7 @@ public class ArticleController {
     @GetMapping("/create/{id}")
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
     public String redirectToArticleCreationPage(@PathVariable(value = "id", required = false) UUID id) {
-        if (id == null)
-            return "redirect:/articles/" + UUID.randomUUID() + "/create";
+        if (id == null) return "redirect:/articles/" + UUID.randomUUID() + "/create";
         return ARTICLE_TEMPLATES + "/create";
     }
 
@@ -44,7 +43,7 @@ public class ArticleController {
                                 @RequestParam("content") String content,
                                 @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail) throws IOException {
         Article article = articleService.saveArticle(id, title, content, thumbnail);
-        return "redirect:/articles/" + article.getLink();
+        return "redirect:/articles/" + article.getId();
     }
 
     @PostMapping(value = "/upload/image/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,8 +55,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public String getArticlePageByLink(@PathVariable("id") UUID id,
-                                       Model model) {
+    public String getArticlePageById(@PathVariable("id") UUID id, Model model) {
         model.addAttribute("article", articleService.getArticleById(id));
         return ARTICLE_TEMPLATES + "/id";
     }
@@ -76,9 +74,8 @@ public class ArticleController {
                                 @RequestParam("content") String content,
                                 @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail) throws IOException {
         Article article = articleService.saveArticle(id, title, content, thumbnail);
-        return "redirect:/articles/" + article.getLink();
+        return "redirect:/articles/" + article.getId();
     }
-
 
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -86,7 +83,6 @@ public class ArticleController {
         model.addAttribute("articles", articleService.getAllArticles());
         return ARTICLE_TEMPLATES + "/list";
     }
-
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('DELETE_ARTICLES')")
