@@ -25,8 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestPropertySource("/application-test.properties")
 @SpringBootTest
+@TestPropertySource("/application-test.properties")
 @AutoConfigureMockMvc
 class MainControllerTest {
     @Autowired
@@ -75,7 +75,7 @@ class MainControllerTest {
                 .role(UserRole.ROLE_ADMIN)
                 .build();
 
-        given(appUserService.getAdminsAndModerators()).willReturn(Set.of(admin, moderator));
+        given(appUserService.getBosses()).willReturn(Set.of(admin, moderator));
 
         mockMvc.perform(get("/contact-us"))
                 .andDo(print())

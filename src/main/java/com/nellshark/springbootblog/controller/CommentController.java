@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.UUID;
 
@@ -20,20 +21,20 @@ import java.util.UUID;
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping("/add/{articleId}")
+    @PostMapping("{articleId}")
     @PreAuthorize("hasAuthority('WRITE_COMMENTS')")
-    public String addComment(@PathVariable("articleId") UUID articleId,
-                             @RequestParam("comment") String content,
-                             @AuthenticationPrincipal User user) {
+    public ModelAndView addComment(@PathVariable("articleId") UUID articleId,
+                                   @RequestParam("comment") String content,
+                                   @AuthenticationPrincipal User user) {
         commentService.saveComment(articleId, user, content);
-        return "redirect:/articles/" + articleId;
+        return new ModelAndView("redirect:/articles/" + articleId);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     @PreAuthorize("#user.getId().equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
-    public String deleteComment(@PathVariable("id") Long id,
-                                @AuthenticationPrincipal User user) {
+    public ModelAndView deleteComment(@PathVariable("id") Long id,
+                                      @AuthenticationPrincipal User user) {
         commentService.deleteCommentById(id);
-        return "redirect:/";
+        return new ModelAndView("redirect:/");
     }
 }

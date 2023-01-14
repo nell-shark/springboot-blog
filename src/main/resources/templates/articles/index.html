@@ -20,7 +20,7 @@
     </section>
 
     <section th:unless="${search == null || search.isEmpty()}" class="py-5 text-center container">
-        <form action="/" role="search">
+        <form action="/articles" role="search">
             <div class="input-group mb-3">
                 <input type="search" class="form-control" name="search" id="search" th:value="${search}"
                        placeholder="Search">

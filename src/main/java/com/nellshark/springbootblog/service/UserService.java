@@ -6,12 +6,19 @@ import com.nellshark.springbootblog.model.UserRole;
 import com.nellshark.springbootblog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +32,7 @@ import static java.util.stream.Collectors.toSet;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -53,12 +61,19 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException("User with email='%s' wasn't found".formatted(email)));
     }
 
+    public boolean existsEmail(String email) {
+        log.info("Checking the uniqueness of an email");
+        return userRepository.findAll()
+                .stream()
+                .anyMatch(user -> user.getEmail().equals(email));
+    }
+
     public List<User> getAllUsers() {
         log.info("Getting all users");
         return userRepository.findAll();
     }
 
-    public Set<User> getAdminsAndModerators() {
+    public Set<User> getBosses() {
         log.info("Getting admins and moderators");
         return userRepository.findAll()
                 .stream()
@@ -66,11 +81,27 @@ public class UserService implements UserDetailsService {
                 .collect(toSet());
     }
 
-    public User saveUser(User user) {
+    public User save(User user) {
         log.info("Saving the user in the db: " + user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(UserRole.ROLE_USER);
         return userRepository.save(user);
+    }
+
+    public void saveAndAuthenticate(User user, HttpServletRequest request) {
+        save(user);
+        signIn(user, request);
+    }
+
+    public void signIn(User user, HttpServletRequest request) {
+        request.getSession();
+        Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
+    public void signOut(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) new SecurityContextLogoutHandler().logout(request, response, auth);
     }
 
     public void updateUser(Long id, String email, String password, MultipartFile file) throws IOException {

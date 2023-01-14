@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @Data
@@ -28,15 +30,16 @@ public class Comment {
     private Long id;
 
     @NonNull
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.ALL)
     private Article article;
 
     @NonNull
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.ALL)
     private User user;
 
     @NonNull
     @Column(name = "content")
+    @NotEmpty(message = "Comment cannot be empty")
     private String content;
 
     @Column(name = "local_date_time")

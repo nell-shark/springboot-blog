@@ -23,14 +23,14 @@
             <tr>
                 <th th:text="${article.getId()}"></th>
                 <td>
-                    <a th:href="@{'/articles/' + ${article.getLink()}}"
-                       class="nav-link" th:text="${article.getTitle()}">Edit</a>
+                    <a th:href="@{'/articles/edit' + ${article.getId()}}"
+                       class="nav-link" th:text="${article.getTitle()}"></a>
                 </td>
                 <td th:text="${#temporals.format(article.getLocalDateTime(), 'HH:mm dd/MM/yyyy')}"></td>
-                <td><a th:href="@{'/articles/' + ${article.getId()} + '/edit'}" type="button"
+                <td><a th:href="@{'/articles/edit/' + ${article.getId()}}" type="button"
                        class="btn btn-outline-primary">Edit</a></td>
                 <td>
-                    <form th:method="DELETE" th:action="@{'/articles/delete'+${article.getId()}}">
+                    <form th:method="DELETE" th:action="@{'/articles/'+${article.getId()}}">
                         <button type="submit" class="btn btn-outline-danger">Delete</button>
                     </form>
                 </td>

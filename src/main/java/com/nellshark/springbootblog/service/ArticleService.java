@@ -42,15 +42,15 @@ public class ArticleService {
 
     public List<Article> doSearch(String search) {
         log.info("Searching an article: " + search);
-        return articleRepository.search(search);
+        return articleRepository.doSearch(search);
     }
 
-    public Article saveArticle(Article article) {
+    public Article saveOrUpdate(Article article) {
         log.info("Saving the article in db: " + article);
         return articleRepository.save(article);
     }
 
-    public Article saveArticle(UUID id, String title, String content, MultipartFile file) throws IOException {
+    public Article saveOrUpdate(UUID id, String title, String content, MultipartFile file) throws IOException {
         log.info("Creating or Updating an article to save: " + id);
         Article article = Article.builder()
                 .id(id)
@@ -63,7 +63,7 @@ public class ArticleService {
             article.setThumbnail(image);
         }
 
-        return saveArticle(article);
+        return saveOrUpdate(article);
     }
 
 

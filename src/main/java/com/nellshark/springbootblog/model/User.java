@@ -20,6 +20,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,27 +42,33 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "email", unique = true)
     @NonNull
-    @Column(name = "email")
+    @Email(message = "Email is not valid")
+    @NotEmpty(message = "Email cannot be empty")
+//    @UniqueUserEmail
     private String email;
 
+    @Column(name = "password", nullable = false, unique = true)
     @NonNull
-    @Column(name = "password")
+    @NotEmpty(message = "Password cannot be empty")
+    @Size(min = 8, max = 20, message = "The password length should be between 8 and 20")
     private String password;
 
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Builder.Default
     private UserRole role = UserRole.ROLE_USER;
 
     @Column(name = "avatar")
     private String avatar;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Comment> comments = new ArrayList<>();
 
     public Optional<String> getAvatar() {
-        if (avatar == null) return Optional.empty();
+        if (id == null || avatar == null) return Optional.empty();
         return Optional.of(STORAGE_FOLDER + "/users/" + getId() + "/" + avatar);
     }
 

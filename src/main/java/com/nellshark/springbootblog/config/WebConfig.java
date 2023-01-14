@@ -8,7 +8,7 @@ import static com.nellshark.springbootblog.service.FileService.APP_LOCATION;
 import static com.nellshark.springbootblog.service.FileService.STORAGE_FOLDER;
 
 @Configuration
-public class WebMvcConfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry

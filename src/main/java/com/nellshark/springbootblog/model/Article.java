@@ -14,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,24 +35,26 @@ public class Article {
     @NonNull
     private UUID id;
 
-    @NonNull
     @Column(name = "title")
+    @NonNull
+    @NotEmpty(message = "Title cannot be empty")
     private String title;
 
+    @Column(name = "content")
     @ToString.Exclude
     @NonNull
-    @Column(name = "content")
+    @NotEmpty(message = "Content cannot be empty")
     private String content;
 
     @Column(name = "thumbnail")
     private String thumbnail;
 
-    @Builder.Default
     @Column(name = "local_date_time")
+    @Builder.Default
     private LocalDateTime localDateTime = LocalDateTime.now();
 
-    @ToString.Exclude
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
+    @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
 
     public Optional<String> getThumbnail() {

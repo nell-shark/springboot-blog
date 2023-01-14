@@ -5,10 +5,10 @@
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
-                    <li><a href="/contact-us" class="nav-link px-2 text-white">Contact us</a></li>
+                    <li><a href="/users/contact-us" class="nav-link px-2 text-white">Contact us</a></li>
                 </ul>
 
-                <form action="/" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                <form action="/articles" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
                     <input type="search" name="search" id="search" th:value="${search}"
                            class="form-control form-control-dark text-white bg-dark" placeholder="Search..."
                            aria-label="Search" required>
@@ -27,17 +27,17 @@
                     </a>
                     <ul class="dropdown-menu text-small" style="">
                         <li><a class="dropdown-item" th:href="@{'/users/'+${user.id}}">Profile</a></li>
-                        <li><a class="dropdown-item" th:href="@{'/users/'+${user.id}+'/edit'}">Edit</a></li>
+                        <li><a class="dropdown-item" th:href="@{'/users/edit/' + ${user.id}}">Edit</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li sec:authorize="hasRole('ROLE_ADMIN')">
                             <a class="dropdown-item"
-                               href="/users/list">List of Users</a>
+                               href="/admin/users">List of Users</a>
                         </li>
                         <li sec:authorize="hasRole('ROLE_ADMIN')">
                             <a class="dropdown-item"
-                               href="/articles/list">List of Articles</a>
+                               href="/admin/articles">List of Articles</a>
                         </li>
                         <li sec:authorize="hasAuthority('CREATE_ARTICLES')">
                             <a class="dropdown-item"

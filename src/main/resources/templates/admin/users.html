@@ -31,18 +31,12 @@
                     <a th:href="@{'/users/' + ${user.getId()}}" th:text="${user.getEmail()}" class="nav-link"></a>
                 </td>
                 <td>
-                    <select class="form-select">
-                        <div th:each="role : ${roles}" th:remove="tag">
-                            <option th:selected="${#strings.equalsIgnoreCase(role, user.getRole())}"
-                                    th:text="${role}">
-                            </option>
-                        </div>
-                    </select>
+                    <p th:text="${user.getRole()}"></p>
                 </td>
                 <td><a th:href="@{'/users/edit' + ${user.getId()}}" type="button"
                        class="btn btn-outline-primary">Edit</a></td>
                 <td>
-                    <form th:action="@{'/users/delete' + ${user.getId()}}" th:method="DELETE">
+                    <form th:action="@{'/users/' + ${user.getId()}}" th:method="DELETE">
                         <button class="btn btn-outline-danger" type="submit">Delete</button>
                     </form>
                 </td>

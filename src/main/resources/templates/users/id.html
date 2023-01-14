@@ -23,12 +23,12 @@
                             <div class="flex-grow-1 ms-3">
                                 <h5 class="mb-1" th:text="${userById.getEmail()}"></h5>
                                 <p class="mb-2 pb-1" style="color: #2b2a2a;" th:text="${userById.getRole()}"></p>
-                                <div th:each="comment : ${comments}" th:remove="tag">
+                                <div th:each="comment : ${userById.getComments()}" th:remove="tag">
                                     <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
                                          style="background-color: #efefef;">
                                         <div>
                                             <a class="nav-link text-muted"
-                                               th:href="@{'/articles/'+${comment.getArticle().getLink()}}">
+                                               th:href="@{'/articles/'+${comment.getArticle().getTitle()}}">
                                                 <p
                                                         class="small mb-1"
                                                         th:text="${comment.getArticle().getTitle()}">
@@ -43,7 +43,7 @@
                                        class="btn btn-outline-primary me-1 flex-grow-1">Chat</a>
                                     <a sec:authorize="isAuthenticated()"
                                        th:if="${#strings.equals({#authentication.name}, {userById.getEmail()})}"
-                                       th:href="@{'/users/edit' + ${userById.getId()}}"
+                                       th:href="@{'/users/edit/' + ${userById.getId()}}"
                                        type="button" class="btn btn-outline-primary me-1 flex-grow-1">Edit</a>
                                 </div>
                             </div>

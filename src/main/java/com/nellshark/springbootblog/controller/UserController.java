@@ -1,19 +1,13 @@
 package com.nellshark.springbootblog.controller;
 
 import com.nellshark.springbootblog.model.User;
-import com.nellshark.springbootblog.model.UserRole;
 import com.nellshark.springbootblog.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,95 +17,83 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("users")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
     private final UserService userService;
-    private final String USER_TEMPLATES = "users";
 
-    @GetMapping("/sign-up")
-    public String getSignUpPage(Model model) {
-        model.addAttribute("newUser", new User());
-        return USER_TEMPLATES + "/sign-up";
+    @GetMapping("contact-us")
+    public ModelAndView getContactUsPage() {
+        return new ModelAndView("users/contact-us")
+                .addObject("bosses", userService.getBosses());
     }
 
-    @PostMapping("/sign-up")
-    public String createNewUser(@ModelAttribute(name = "newUser") User user,
-                                HttpServletRequest request) {
-        User usr = userService.saveUser(user);
-        authenticateUserAndSetSession(usr.getUsername(), request);
-        return "redirect:/";
+    @GetMapping("sign-up")
+    public ModelAndView getSignUpPage() {
+        return new ModelAndView("users/sign-up")
+                .addObject("newUser", new User());
     }
 
-    @GetMapping("/sign-in")
-    public String getSignInPage() {
-        return USER_TEMPLATES + "/sign-in";
+    @GetMapping("sign-in")
+    public ModelAndView getSignInPage() {
+        return new ModelAndView("users/sign-in");
     }
 
-    @GetMapping("/{id}")
-    public String getUserPage(@PathVariable("id") Long id, Model model) {
-        User userById = userService.getUserById(id);
-        model.addAttribute("userById", userById);
-        model.addAttribute("comments", userById.getComments());
-        return USER_TEMPLATES + "/id";
+    @GetMapping("{id}")
+    public ModelAndView getUserPage(@PathVariable("id") Long id) {
+        User user = userService.getUserById(id);
+        return new ModelAndView("users/id")
+                .addObject("userById", user);
     }
 
-    @GetMapping("/list")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String getListOfUsersPage(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("roles", UserRole.values());
-        return USER_TEMPLATES + "/list";
+
+    @GetMapping("sign-out")
+    public ModelAndView signOut(HttpServletRequest request, HttpServletResponse response) {
+        userService.signOut(request, response);
+        return new ModelAndView("redirect:/");
     }
 
-    @GetMapping("/edit/{id}")
+
+    @GetMapping("edit/{id}")
     @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
-    public String getEditPage(@PathVariable("id") Long id, Model model) {
-        return USER_TEMPLATES + "/edit";
+    public ModelAndView getUserEditPage(@PathVariable("id") Long id, Model model) {
+        return new ModelAndView("users/edit");
     }
 
-    @PatchMapping("/edit/{id}")
+    @PostMapping
+    public ModelAndView createNewUser(@ModelAttribute(name = "newUser") @Valid User user,
+                                      BindingResult bindingResult,
+                                      HttpServletRequest request) {
+        if (bindingResult.hasErrors()) return new ModelAndView("redirect:/users/sign-up");
+        userService.saveAndAuthenticate(user, request);
+        return new ModelAndView("redirect:/users/" + user.getId());
+    }
+
+    // TODO: ModelAttribute
+    @PatchMapping("{id}")
     @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
-    public String updateUser(@PathVariable("id") Long id,
-                             @RequestParam("email") String email,
-                             @RequestParam("password") String password,
-                             @RequestParam(value = "avatar", required = false) MultipartFile avatar) throws IOException {
+    public ModelAndView updateUser(@PathVariable("id") Long id,
+                                   @RequestParam("email") String email,
+                                   @RequestParam("password") String password,
+                                   @RequestParam(value = "avatar", required = false) MultipartFile avatar) throws IOException {
         userService.updateUser(id, email, password, avatar);
-        return "redirect:/";
+        return new ModelAndView("redirect:/");
     }
 
-    @GetMapping("/sign-out")
-    public String signOut(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) new SecurityContextLogoutHandler().logout(request, response, auth);
-        return "redirect:/";
-    }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
-    public String deleteUser(@PathVariable("id") Long id,
-                             @AuthenticationPrincipal User user,
-                             HttpServletRequest request,
-                             HttpServletResponse response) throws IOException {
-        // TODO: check admin
-
+    public ModelAndView deleteUser(@PathVariable("id") Long id) {
         userService.deleteUserById(id);
-
-        if (user.getRole().equals(UserRole.ROLE_ADMIN)) return "redirect:/users/list";
-        return "redirect:/";
-    }
-
-    private void authenticateUserAndSetSession(String username, HttpServletRequest request) {
-        request.getSession();
-        UserDetails user = userService.loadUserByUsername(username);
-        Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        return new ModelAndView("redirect:/");
     }
 }
