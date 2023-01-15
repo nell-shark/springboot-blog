@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
             CommentNotFoundException.class,
             UserNotFoundException.class,
             FileIsEmptyException.class,
-            FileIsNotImageException.class
+            FileIsNotImageException.class,
     })
     public ModelAndView handleAppException(Exception exception) {
         log.error(exception.getClass().getSimpleName() + " Occurred: " + exception.getMessage());
@@ -37,10 +37,5 @@ public class GlobalExceptionHandler {
     public ModelAndView handleIOException(Exception exception) {
         log.error(exception.getClass().getSimpleName() + " Occurred: " + exception.getMessage());
         return new ModelAndView("error", "exception", exception.getMessage());
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public void handleRuntimeException(Exception exception) {
-        log.error(exception.getClass().getSimpleName() + " Occurred: " + exception.getMessage());
     }
 }

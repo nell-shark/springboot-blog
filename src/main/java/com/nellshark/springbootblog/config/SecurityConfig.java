@@ -36,7 +36,8 @@ public class SecurityConfig {
                 .logout()
                     .logoutUrl("/users/sign-out")
                     .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID");
+                    .deleteCookies("JSESSIONID")
+                    .deleteCookies("remember-me");
         return http.build();
         //    @formatter:on
     }

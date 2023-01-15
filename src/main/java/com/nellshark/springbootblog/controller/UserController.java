@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,40 +54,38 @@ public class UserController {
                 .addObject("userById", user);
     }
 
-
     @GetMapping("sign-out")
     public ModelAndView signOut(HttpServletRequest request, HttpServletResponse response) {
         userService.signOut(request, response);
         return new ModelAndView("redirect:/");
     }
 
-
     @GetMapping("edit/{id}")
     @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
-    public ModelAndView getUserEditPage(@PathVariable("id") Long id, Model model) {
-        return new ModelAndView("users/edit");
+    public ModelAndView getUserEditPage(@PathVariable("id") Long id) {
+        return new ModelAndView("users/edit")
+                .addObject("userById", userService.getUserById(id));
     }
 
     @PostMapping
     public ModelAndView createNewUser(@ModelAttribute(name = "newUser") @Valid User user,
                                       BindingResult bindingResult,
-                                      HttpServletRequest request) {
+                                      HttpServletRequest request) throws IOException {
         if (bindingResult.hasErrors()) return new ModelAndView("redirect:/users/sign-up");
         userService.saveAndAuthenticate(user, request);
         return new ModelAndView("redirect:/users/" + user.getId());
     }
 
-    // TODO: ModelAttribute
     @PatchMapping("{id}")
     @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
     public ModelAndView updateUser(@PathVariable("id") Long id,
-                                   @RequestParam("email") String email,
-                                   @RequestParam("password") String password,
-                                   @RequestParam(value = "avatar", required = false) MultipartFile avatar) throws IOException {
-        userService.updateUser(id, email, password, avatar);
+                                   @ModelAttribute("userById") @Valid User updatedUser,
+                                   BindingResult bindingResult,
+                                   @RequestParam(value = "file", required = false) MultipartFile avatar) throws IOException {
+        if (bindingResult.hasErrors()) return new ModelAndView("redirect:/users/edit/" + id);
+        userService.save(updatedUser, avatar);
         return new ModelAndView("redirect:/");
     }
-
 
     @DeleteMapping("{id}")
     @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")

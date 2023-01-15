@@ -4,20 +4,19 @@
 <head>
     <div th:replace="blocks/head :: head"></div>
     <title>Blog</title>
-    <!--    <meta name="_csrf" th:content="${_csrf.token}"/>-->
-    <!--    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
 </head>
 
 <body>
 <div th:insert="blocks/header :: header" th:remove="tag"></div>
 
 <div class="container h-100 mt-4">
-    <form th:action="@{'/articles/create/' + ${id}}" method="POST" enctype="multipart/form-data">
-        <input id="title" name="title" type="text" class="form-control mb-2" placeholder="Title">
-        <input id="thumbnail" name="thumbnail" class="form-control mb-4" type="file" accept=".jpg, .jpeg, .png, .webp">
-        <textarea id="content" name="content"></textarea>
+    <form th:action="@{'/articles/' + ${id}}" method="POST" enctype="multipart/form-data" th:object="${newArticle}">
+        <input th:field="*{title}" type="text" class="form-control mb-2" placeholder="Title">
+        <input name="file" class="form-control mb-4" type="file"
+               accept=".jpg, .jpeg, .png, .webp">
+        <textarea id="content" th:field="*{content}"></textarea>
         <div dir="rtl">
-            <button class="btn btn-primary btn-lg mt-1" type="submit" id="button">Submit</button>
+            <button class="btn btn-primary btn-lg mt-1" type="submit">Submit</button>
         </div>
     </form>
 </div>
@@ -29,4 +28,5 @@
 
 <div th:insert="blocks/footer :: footer"></div>
 </body>
+
 </html>

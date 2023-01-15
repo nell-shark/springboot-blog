@@ -9,7 +9,7 @@
 
 <section class="py-5 text-center container">
     <h1 class="fw-light" th:text="${article.getTitle()}"></h1>
-    <img th:src="${article.getThumbnail().get()}" class="w-100 h-50 rounded ">
+    <img th:src="${article.getThumbnail().orElse('/images/favicon.svg')}" class="mw-100 rounded">
 </section>
 
 <div class="container pb-4">
@@ -23,7 +23,7 @@
         <div class="card shadow-0 border" style="background-color: #f0f2f5;">
             <div class="card-body p-4">
                 <div sec:authorize="isAuthenticated()" class="form-outline mb-4">
-                    <form th:action="@{'/comments/add' + ${article.getId()}}" method="POST">
+                    <form th:action="@{'/comments/' + ${article.getId()}}" th:method="POST">
                         <input type="text" id="comment" name="comment" class="form-control"
                                placeholder="Add a comment"/>
                     </form>

@@ -36,7 +36,7 @@
                     <a th:href="@{'/articles/'+${article.getId()}}" class="nav-link">
                         <div class="card mb-4 card-animation">
                             <img class="card-img-top"
-                                 th:src="${article.getThumbnail().get()}"
+                                 th:src="${article.getThumbnail().orElse('/images/favicon.svg')}"
                                  alt="thumbnail">
                             <div class="card-body">
                                 <p class="card-text" th:text="${article.getTitle()}"></p>

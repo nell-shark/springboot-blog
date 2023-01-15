@@ -5,12 +5,12 @@ import com.nellshark.springbootblog.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 
@@ -52,7 +52,8 @@ public class ArticleController {
     @GetMapping("create/{id}")
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
     public ModelAndView getArticleCreatePage(@PathVariable("id") UUID id) {
-        return new ModelAndView("articles/create");
+        return new ModelAndView("articles/create")
+                .addObject("newArticle", new Article());
     }
 
 
@@ -72,30 +73,24 @@ public class ArticleController {
     @PostMapping("{id}")
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
     public ModelAndView createArticle(@PathVariable("id") UUID id,
-                                      @RequestParam("title") String title,
-                                      @RequestParam("content") String content,
-                                      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail) throws IOException {
-        Article article = articleService.saveOrUpdate(id, title, content, thumbnail);
-        return new ModelAndView("redirect:/articles/" + article.getId());
+                                      @ModelAttribute("newArticle") @Valid Article article,
+                                      BindingResult bindingResult,
+                                      @RequestParam(value = "file", required = false) MultipartFile thumbnail) throws IOException {
+        if (bindingResult.hasErrors()) return new ModelAndView("redirect:/articles/create");
+        articleService.save(article, thumbnail);
+        return new ModelAndView("redirect:/articles/" + id);
     }
 
-    @PostMapping("{id}/image")
-    @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
-    public ResponseEntity<Map<String, String>> uploadImage(@PathVariable("id") UUID id,
-                                                           @RequestParam("file") MultipartFile file) throws IOException {
-        String image = articleService.saveArticleImage(file, id);
-        return new ResponseEntity<>(Map.of("location", image), HttpStatus.OK);
-    }
-
-    // TODO: ModelAttribute
     @PatchMapping("{id}")
     @PreAuthorize("hasAuthority('EDIT_ARTICLES')")
     public ModelAndView updateArticle(@PathVariable("id") UUID id,
-                                      @RequestParam("title") String title,
-                                      @RequestParam("content") String content,
-                                      @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail) throws IOException {
-        Article article = articleService.saveOrUpdate(id, title, content, thumbnail);
-        return new ModelAndView("redirect:/articles/" + article.getId());
+                                      @ModelAttribute("article") @Valid Article updatedArticle,
+                                      BindingResult bindingResult,
+                                      @RequestParam(value = "file", required = false) MultipartFile thumbnail) throws IOException {
+        if (bindingResult.hasErrors()) return new ModelAndView("redirect:/articles/edit/" + id);
+
+        articleService.save(updatedArticle, thumbnail);
+        return new ModelAndView("redirect:/articles/" + id);
     }
 
 

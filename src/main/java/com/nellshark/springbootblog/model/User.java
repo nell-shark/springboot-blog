@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +21,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,21 +36,17 @@ import static com.nellshark.springbootblog.service.FileService.STORAGE_FOLDER;
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", unique = true)
-    @NonNull
-    @Email(message = "Email is not valid")
+    @Column(name = "email", nullable = false, unique = true)
     @NotEmpty(message = "Email cannot be empty")
-//    @UniqueUserEmail
+    @Email(message = "Email is not valid")
     private String email;
 
-    @Column(name = "password", nullable = false, unique = true)
-    @NonNull
+    @Column(name = "password", nullable = false)
     @NotEmpty(message = "Password cannot be empty")
-    @Size(min = 8, max = 20, message = "The password length should be between 8 and 20")
     private String password;
 
     @Column(name = "role", nullable = false)

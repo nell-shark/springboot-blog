@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/comments")
+@RequestMapping("comments")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;

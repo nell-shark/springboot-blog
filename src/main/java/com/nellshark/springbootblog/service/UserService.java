@@ -2,7 +2,6 @@ package com.nellshark.springbootblog.service;
 
 import com.nellshark.springbootblog.exception.UserNotFoundException;
 import com.nellshark.springbootblog.model.User;
-import com.nellshark.springbootblog.model.UserRole;
 import com.nellshark.springbootblog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +24,6 @@ import java.util.Set;
 
 import static com.nellshark.springbootblog.model.UserRole.ROLE_ADMIN;
 import static com.nellshark.springbootblog.model.UserRole.ROLE_MODERATOR;
-import static com.nellshark.springbootblog.service.FileService.APP_LOCATION;
-import static com.nellshark.springbootblog.service.FileService.STORAGE_FOLDER;
 import static java.util.stream.Collectors.toSet;
 
 @Service
@@ -44,7 +41,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User getUserById(Long id) {
-        log.info("Getting a user by id: " + id);
+        log.info("Getting the user by id: " + id);
         return userRepository.findAll()
                 .stream()
                 .filter(user -> user.getId().equals(id))
@@ -53,7 +50,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User getUserByEmail(String email) {
-        log.info("Getting a user by email: " + email);
+        log.info("Getting the user by email: " + email);
         return userRepository.findAll()
                 .stream()
                 .filter(user -> user.getEmail().equals(email))
@@ -62,7 +59,7 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean existsEmail(String email) {
-        log.info("Checking the uniqueness of an email");
+        log.info("Checking the uniqueness of the email: " + email);
         return userRepository.findAll()
                 .stream()
                 .anyMatch(user -> user.getEmail().equals(email));
@@ -81,15 +78,18 @@ public class UserService implements UserDetailsService {
                 .collect(toSet());
     }
 
-    public User save(User user) {
+    public void save(User user, MultipartFile avatar) throws IOException {
         log.info("Saving the user in the db: " + user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(UserRole.ROLE_USER);
-        return userRepository.save(user);
+        if (avatar != null && !avatar.isEmpty()) {
+            String _avatar = saveAvatar(user, avatar);
+            user.setAvatar(_avatar);
+        }
+        userRepository.save(user);
     }
 
-    public void saveAndAuthenticate(User user, HttpServletRequest request) {
-        save(user);
+    public void saveAndAuthenticate(User user, HttpServletRequest request) throws IOException {
+        save(user, null);
         signIn(user, request);
     }
 
@@ -104,34 +104,11 @@ public class UserService implements UserDetailsService {
         if (auth != null) new SecurityContextLogoutHandler().logout(request, response, auth);
     }
 
-    public void updateUser(Long id, String email, String password, MultipartFile file) throws IOException {
-        log.info("Updating the user with id: " + id);
-        User user = getUserById(id);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        if (file != null && !file.isEmpty()) {
-            String avatar = saveUserAvatar(file, id);
-            user.setAvatar(avatar);
-        }
+    private String saveAvatar(User user, MultipartFile avatar) throws IOException {
+        log.info("Saving the User's Avatar: " + avatar);
+        String fileFolder = "/users/" + user.getId() + "/";
 
-        userRepository.save(user);
-    }
-
-    public String saveUserAvatar(MultipartFile file, Long id) throws IOException {
-        log.info("Saving the User's Avatar: " + file.getOriginalFilename());
-
-        String newFileName = fileService.getNewFileName(file.getOriginalFilename());
-
-        final String USERS_STORAGE_FOLDER = STORAGE_FOLDER + "/users";
-
-        String filePath = APP_LOCATION
-                + USERS_STORAGE_FOLDER + "/"
-                + id + "/"
-                + newFileName;
-
-        fileService.saveMultipartFile(file, filePath);
-
-        return USERS_STORAGE_FOLDER + "/" + id + "/" + newFileName;
+        return fileService.saveMultipartFileToLocalStorage(avatar, fileFolder);
     }
 
     public void deleteUserById(Long id) {

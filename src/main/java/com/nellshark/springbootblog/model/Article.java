@@ -31,25 +31,23 @@ import static com.nellshark.springbootblog.service.FileService.STORAGE_FOLDER;
 @Table(name = "articles")
 public class Article {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, unique = true)
     @NonNull
     private UUID id;
 
-    @Column(name = "title")
-    @NonNull
+    @Column(name = "title", unique = true, nullable = false)
     @NotEmpty(message = "Title cannot be empty")
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false)
     @ToString.Exclude
-    @NonNull
     @NotEmpty(message = "Content cannot be empty")
     private String content;
 
     @Column(name = "thumbnail")
     private String thumbnail;
 
-    @Column(name = "local_date_time")
+    @Column(name = "local_date_time", nullable = false)
     @Builder.Default
     private LocalDateTime localDateTime = LocalDateTime.now();
 

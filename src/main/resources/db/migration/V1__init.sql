@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS users cascade;
 DROP TABLE IF EXISTS comments cascade;
 
 CREATE TABLE articles (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4() NOT NULL,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     title VARCHAR(255) NOT NULL UNIQUE,
     content TEXT NOT NULL,
     thumbnail TEXT DEFAULT NULL,

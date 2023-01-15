@@ -13,9 +13,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-import static com.nellshark.springbootblog.service.FileService.APP_LOCATION;
-import static com.nellshark.springbootblog.service.FileService.STORAGE_FOLDER;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -45,43 +42,24 @@ public class ArticleService {
         return articleRepository.doSearch(search);
     }
 
-    public Article saveOrUpdate(Article article) {
+    public void save(Article article) {
         log.info("Saving the article in db: " + article);
-        return articleRepository.save(article);
+        articleRepository.save(article);
     }
 
-    public Article saveOrUpdate(UUID id, String title, String content, MultipartFile file) throws IOException {
-        log.info("Creating or Updating an article to save: " + id);
-        Article article = Article.builder()
-                .id(id)
-                .title(title)
-                .content(content)
-                .build();
-
-        if (file != null && !file.isEmpty()) {
-            String image = saveArticleImage(file, id);
+    public void save(Article article, MultipartFile thumbnail) throws IOException {
+        if (thumbnail != null && !thumbnail.isEmpty()) {
+            String image = saveAvatar(article, thumbnail);
             article.setThumbnail(image);
         }
-
-        return saveOrUpdate(article);
+        save(article);
     }
 
+    private String saveAvatar(Article article, MultipartFile thumbnail) throws IOException {
+        log.info("Saving the User's Avatar: " + thumbnail);
+        String fileFolder = "/articles/" + article.getId() + "/";
 
-    public String saveArticleImage(MultipartFile file, UUID id) throws IOException {
-        log.info("Saving the Article's Image");
-
-        String newFileName = fileService.getNewFileName(file.getOriginalFilename());
-
-        final String ARTICLES_STORAGE_FOLDER = STORAGE_FOLDER + "/articles";
-
-        String filePath = APP_LOCATION
-                + ARTICLES_STORAGE_FOLDER + "/"
-                + id + "/"
-                + newFileName;
-
-        fileService.saveMultipartFile(file, filePath);
-
-        return ARTICLES_STORAGE_FOLDER + "/" + id + "/" + newFileName;
+        return fileService.saveMultipartFileToLocalStorage(thumbnail, fileFolder);
     }
 
     public void deleteArticleById(UUID id) {

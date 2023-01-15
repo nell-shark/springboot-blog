@@ -33,7 +33,7 @@
                 <td>
                     <p th:text="${user.getRole()}"></p>
                 </td>
-                <td><a th:href="@{'/users/edit' + ${user.getId()}}" type="button"
+                <td><a th:href="@{'/users/edit/' + ${user.getId()}}" type="button"
                        class="btn btn-outline-primary">Edit</a></td>
                 <td>
                     <form th:action="@{'/users/' + ${user.getId()}}" th:method="DELETE">
