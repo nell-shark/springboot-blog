@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,10 +44,12 @@ public class User implements UserDetails {
     @Column(name = "email", nullable = false, unique = true)
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Email is not valid")
+    @NonNull
     private String email;
 
     @Column(name = "password", nullable = false)
     @NotEmpty(message = "Password cannot be empty")
+    @NonNull
     private String password;
 
     @Column(name = "role", nullable = false)

@@ -23,32 +23,22 @@ public class CharResponseWrapperConfig extends HttpServletResponseWrapper {
     }
 
     public ServletOutputStream getOutputStream() throws IOException {
-        if (getWriterCalled) {
-            throw new IllegalStateException("getWriter already called");
-        }
+        if (getWriterCalled) throw new IllegalStateException("getWriter already called");
 
         getOutputStreamCalled = true;
         return super.getOutputStream();
     }
 
     public PrintWriter getWriter() {
-        if (writer != null) {
-            return writer;
-        }
-        if (getOutputStreamCalled) {
-            throw new IllegalStateException("getOutputStream already called");
-        }
+        if (writer != null) return writer;
+        if (getOutputStreamCalled) throw new IllegalStateException("getOutputStream already called");
+
         getWriterCalled = true;
         writer = new PrintWriter(charWriter);
         return writer;
     }
 
     public String toString() {
-        String s = null;
-
-        if (writer != null) {
-            s = charWriter.toString();
-        }
-        return s;
+        return (writer != null) ? charWriter.toString() : null;
     }
 }

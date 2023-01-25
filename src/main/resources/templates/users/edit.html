@@ -16,7 +16,7 @@
                 <div class="card text-black" style="border-radius: 25px;">
                     <div class="card-body p-md-5">
                         <div class="row justify-content-center">
-                            <form th:method="PATCH" th:action="@{'/users/'+${userById.getId()}}"
+                            <form th:method="PATCH" th:action="@{ '/users/' + ${userById.getId()} }"
                                   th:object="${userById}" class="mx-1 mx-md-4" enctype="multipart/form-data">
                                 <label class="form-label" for="email">New Email</label>
                                 <input type="email" id="email" name="email" class="form-control"

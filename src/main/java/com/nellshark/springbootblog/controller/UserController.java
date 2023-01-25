@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 
@@ -30,9 +29,9 @@ import java.io.IOException;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("contact-us")
-    public ModelAndView getContactUsPage() {
-        return new ModelAndView("users/contact-us")
+    @GetMapping("bosses")
+    public ModelAndView getBossesPage() {
+        return new ModelAndView("users/bosses")
                 .addObject("bosses", userService.getBosses());
     }
 
@@ -54,14 +53,9 @@ public class UserController {
                 .addObject("userById", user);
     }
 
-    @GetMapping("sign-out")
-    public ModelAndView signOut(HttpServletRequest request, HttpServletResponse response) {
-        userService.signOut(request, response);
-        return new ModelAndView("redirect:/");
-    }
-
     @GetMapping("edit/{id}")
-    @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') " +
+            "OR #id.equals(authentication.principal.id)")
     public ModelAndView getUserEditPage(@PathVariable("id") Long id) {
         return new ModelAndView("users/edit")
                 .addObject("userById", userService.getUserById(id));
@@ -77,19 +71,21 @@ public class UserController {
     }
 
     @PatchMapping("{id}")
-    @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') " +
+            "OR #id.equals(authentication.principal.id)")
     public ModelAndView updateUser(@PathVariable("id") Long id,
                                    @ModelAttribute("userById") @Valid User updatedUser,
                                    BindingResult bindingResult,
                                    @RequestParam(value = "file", required = false) MultipartFile avatar) throws IOException {
         if (bindingResult.hasErrors()) return new ModelAndView("redirect:/users/edit/" + id);
         userService.save(updatedUser, avatar);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/users/" + id);
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("#id.equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
-    public ModelAndView deleteUser(@PathVariable("id") Long id) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') " +
+            "OR #id.equals(authentication.principal.id)")
+    public ModelAndView deleteUserById(@PathVariable("id") Long id) {
         userService.deleteUserById(id);
         return new ModelAndView("redirect:/");
     }

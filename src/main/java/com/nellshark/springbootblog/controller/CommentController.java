@@ -21,19 +21,20 @@ import java.util.UUID;
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping("{articleId}")
+    @PostMapping
     @PreAuthorize("hasAuthority('WRITE_COMMENTS')")
-    public ModelAndView addComment(@PathVariable("articleId") UUID articleId,
-                                   @RequestParam("comment") String content,
+    public ModelAndView addComment(@RequestParam("articleId") UUID articleId,
+                                   @RequestParam("content") String content,
                                    @AuthenticationPrincipal User user) {
         commentService.saveComment(articleId, user, content);
         return new ModelAndView("redirect:/articles/" + articleId);
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("#user.getId().equals(authentication.principal.id) OR hasRole('ROLE_ADMIN')")
-    public ModelAndView deleteComment(@PathVariable("id") Long id,
-                                      @AuthenticationPrincipal User user) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') " +
+            "OR #user.getId().equals(authentication.principal.id)")
+    public ModelAndView deleteCommentById(@PathVariable("id") Long id,
+                                          @AuthenticationPrincipal User user) {
         commentService.deleteCommentById(id);
         return new ModelAndView("redirect:/");
     }

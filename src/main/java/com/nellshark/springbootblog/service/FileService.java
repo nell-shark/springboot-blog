@@ -55,6 +55,7 @@ public class FileService {
     }
 
     public String generateFileName() {
+        log.info("Generating a file name");
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss-SSS"));
     }
 }

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <div th:replace="blocks/head :: head"></div>
-    <title>Article</title>
+    <title th:text="${article.getTitle()}"></title>
 </head>
 <body>
 <div th:insert="blocks/header :: header" th:remove="tag"></div>
@@ -18,13 +18,15 @@
     </div>
 </div>
 
-<div th:if="${user != null} OR ${!article.getComments().isEmpty()}" class="d-flex justify-content-center">
+<div th:if="${user != null} OR ${article.getComments() != null AND !article.getComments().isEmpty()}"
+     class="d-flex justify-content-center">
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-0 border" style="background-color: #f0f2f5;">
             <div class="card-body p-4">
                 <div sec:authorize="isAuthenticated()" class="form-outline mb-4">
-                    <form th:action="@{'/comments/' + ${article.getId()}}" th:method="POST">
-                        <input type="text" id="comment" name="comment" class="form-control"
+                    <form th:action="@{/comments}" method="POST">
+                        <input type="hidden" name="articleId" th:value="${article.getId()}"/>
+                        <input type="text" name="content" class="form-control"
                                placeholder="Add a comment"/>
                     </form>
                 </div>
@@ -33,7 +35,7 @@
                         <div class="card-body">
                             <p th:text="${comment.getContent()}"></p>
                             <div class="d-flex justify-content-between">
-                                <a th:href="@{'/users/' + ${comment.getUser().getId()}}"
+                                <a th:href="@{ '/users/' + ${comment.getUser().getId()} }"
                                    class="d-flex flex-row align-items-center nav-link">
                                     <img th:src="${comment.getUser().getAvatar().orElse('/images/avatar.svg')}"
                                          alt="avatar"

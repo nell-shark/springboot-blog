@@ -28,7 +28,7 @@
                                          style="background-color: #efefef;">
                                         <div>
                                             <a class="nav-link text-muted"
-                                               th:href="@{'/articles/'+${comment.getArticle().getTitle()}}">
+                                               th:href="@{ '/articles/' + ${comment.getArticle().getTitle()} }">
                                                 <p
                                                         class="small mb-1"
                                                         th:text="${comment.getArticle().getTitle()}">
@@ -39,11 +39,11 @@
                                     </div>
                                 </div>
                                 <div class="d-flex pt-1">
-                                    <a th:href="@{'mailto: '+${userById.getEmail()}}"
+                                    <a th:href="@{ 'mailto: ' + ${userById.getEmail()} }"
                                        class="btn btn-outline-primary me-1 flex-grow-1">Chat</a>
                                     <a sec:authorize="isAuthenticated()"
                                        th:if="${#strings.equals({#authentication.name}, {userById.getEmail()})}"
-                                       th:href="@{'/users/edit/' + ${userById.getId()}}"
+                                       th:href="@{ '/users/edit/' + ${userById.getId()} }"
                                        type="button" class="btn btn-outline-primary me-1 flex-grow-1">Edit</a>
                                 </div>
                             </div>

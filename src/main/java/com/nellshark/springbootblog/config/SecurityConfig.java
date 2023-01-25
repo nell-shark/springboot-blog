@@ -1,7 +1,7 @@
 package com.nellshark.springbootblog.config;
 
 import com.nellshark.springbootblog.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -11,8 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@AllArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -21,11 +21,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //    @formatter:off
         http
-                .csrf().disable().httpBasic().and() // DELETE
                 .authorizeRequests()
                 .and()
                 .formLogin()
-                    .loginPage("/users/sign-in")
+                    .loginPage("/sign-in")
                     .permitAll()
                     .usernameParameter("email")
                     .passwordParameter("password")
@@ -34,10 +33,11 @@ public class SecurityConfig {
                     .rememberMeParameter("remember-me")
                 .and()
                 .logout()
-                    .logoutUrl("/users/sign-out")
+                    .logoutUrl("/sign-out")
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID")
-                    .deleteCookies("remember-me");
+                    .deleteCookies("remember-me")
+                    .logoutSuccessUrl("/");
         return http.build();
         //    @formatter:on
     }

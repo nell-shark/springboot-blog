@@ -28,15 +28,15 @@
                          height="50px">
                 </td>
                 <td>
-                    <a th:href="@{'/users/' + ${user.getId()}}" th:text="${user.getEmail()}" class="nav-link"></a>
+                    <a th:href="@{ '/users/' + ${user.getId()} }" th:text="${user.getEmail()}" class="nav-link"></a>
                 </td>
                 <td>
                     <p th:text="${user.getRole()}"></p>
                 </td>
-                <td><a th:href="@{'/users/edit/' + ${user.getId()}}" type="button"
+                <td><a th:href="@{ '/users/edit/' + ${user.getId()} }" type="button"
                        class="btn btn-outline-primary">Edit</a></td>
                 <td>
-                    <form th:action="@{'/users/' + ${user.getId()}}" th:method="DELETE">
+                    <form th:action="@{ '/users/' + ${user.getId()} }" th:method="DELETE">
                         <button class="btn btn-outline-danger" type="submit">Delete</button>
                     </form>
                 </td>

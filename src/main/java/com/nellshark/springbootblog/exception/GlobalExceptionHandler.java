@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ModelAndView handleAccessDeniedException(Exception exception) {
         log.error(exception.getClass().getSimpleName() + " Occurred: " + exception.getMessage());
-        return new ModelAndView("error", "exception", exception.getMessage());
+        return new ModelAndView("users/sign-in");
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

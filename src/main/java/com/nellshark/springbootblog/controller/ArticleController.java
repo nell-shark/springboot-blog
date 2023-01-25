@@ -45,7 +45,7 @@ public class ArticleController {
 
     @GetMapping("create")
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
-    public ModelAndView redirectToArticleCreatePage() {
+    public ModelAndView redirectToArticleCreatePageWithRandomUUID() {
         return new ModelAndView("redirect:/articles/create/" + UUID.randomUUID());
     }
 
@@ -55,7 +55,6 @@ public class ArticleController {
         return new ModelAndView("articles/create")
                 .addObject("newArticle", new Article());
     }
-
 
     @GetMapping("{id}")
     public ModelAndView getArticlePageById(@PathVariable("id") UUID id) {
@@ -88,16 +87,14 @@ public class ArticleController {
                                       BindingResult bindingResult,
                                       @RequestParam(value = "file", required = false) MultipartFile thumbnail) throws IOException {
         if (bindingResult.hasErrors()) return new ModelAndView("redirect:/articles/edit/" + id);
-
         articleService.save(updatedArticle, thumbnail);
         return new ModelAndView("redirect:/articles/" + id);
     }
 
-
     @DeleteMapping("{id}")
     @PreAuthorize("hasAuthority('DELETE_ARTICLES')")
-    public ModelAndView deleteArticle(@PathVariable("id") UUID id) {
+    public ModelAndView deleteArticleById(@PathVariable("id") UUID id) {
         articleService.deleteArticleById(id);
-        return new ModelAndView("redirect:/articles/");
+        return new ModelAndView("redirect:/articles");
     }
 }

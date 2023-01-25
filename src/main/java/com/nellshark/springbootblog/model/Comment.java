@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,17 +31,20 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "article_id", nullable = false)
+    @NonNull
     private Article article;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @NonNull
     private User user;
 
     @Column(name = "content", nullable = false)
     @NotEmpty(message = "Comment cannot be empty")
+    @NonNull
     private String content;
 
-    @Column(name = "local_date_time", nullable = false)
+    @Column(name = "created_at", nullable = false)
     @Builder.Default
     private LocalDateTime localDateTime = LocalDateTime.now();
 

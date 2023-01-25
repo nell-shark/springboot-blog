@@ -5,11 +5,11 @@
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
-                    <li><a href="/users/contact-us" class="nav-link px-2 text-white">Contact us</a></li>
+                    <li><a href="/users/bosses" class="nav-link px-2 text-white">Contact us</a></li>
                 </ul>
 
                 <form action="/articles" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                    <input type="search" name="search" id="search" th:value="${search}"
+                    <input type="search" name="search" th:value="${search}"
                            class="form-control form-control-dark text-white bg-dark" placeholder="Search..."
                            aria-label="Search" required>
                 </form>
@@ -22,12 +22,17 @@
                 <div sec:authorize="isAuthenticated()" class="dropdown text-end">
                     <a class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
                        aria-expanded="false">
-                        <img th:src="${user.getAvatar().orElse('/images/avatar.svg')}" alt="Avatar" width="32"
+                        <img th:src="${ #authentication.getPrincipal().getAvatar().orElse('/images/avatar.svg') }"
+                             alt="Avatar" width="32"
                              height="32" class="rounded-circle">
                     </a>
-                    <ul class="dropdown-menu text-small" style="">
-                        <li><a class="dropdown-item" th:href="@{'/users/'+${user.id}}">Profile</a></li>
-                        <li><a class="dropdown-item" th:href="@{'/users/edit/' + ${user.id}}">Edit</a></li>
+                    <ul class="dropdown-menu text-small">
+                        <li><a class="dropdown-item"
+                               th:href="@{ '/users/' + ${#authentication.getPrincipal().getId()} }">Profile</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                               th:href="@{ '/users/edit/' + ${#authentication.getPrincipal().getId()} }">Edit</a>
+                        </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -43,7 +48,11 @@
                             <a class="dropdown-item"
                                href="/articles/create">Create article</a>
                         </li>
-                        <li><a class="dropdown-item" href="/users/sign-out">Sign out</a></li>
+                        <li>
+                            <form th:action="@{/sign-out}" method="POST">
+                                <button type="submit" class="dropdown-item">Sign out</button>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>

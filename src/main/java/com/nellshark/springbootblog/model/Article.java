@@ -37,17 +37,19 @@ public class Article {
 
     @Column(name = "title", unique = true, nullable = false)
     @NotEmpty(message = "Title cannot be empty")
+    @NonNull
     private String title;
 
     @Column(name = "content", nullable = false)
     @ToString.Exclude
     @NotEmpty(message = "Content cannot be empty")
+    @NonNull
     private String content;
 
     @Column(name = "thumbnail")
     private String thumbnail;
 
-    @Column(name = "local_date_time", nullable = false)
+    @Column(name = "created_at", nullable = false)
     @Builder.Default
     private LocalDateTime localDateTime = LocalDateTime.now();
 

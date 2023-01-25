@@ -29,7 +29,7 @@ public class ArticleService {
     }
 
     public Article getArticleById(UUID id) {
-        log.info("Getting an article by id: " + id);
+        log.info("Getting the article by id: " + id);
         return articleRepository.findAll()
                 .stream()
                 .filter(article -> article.getId().equals(id))

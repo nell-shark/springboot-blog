@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +28,6 @@ import static java.util.stream.Collectors.toSet;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -56,13 +54,6 @@ public class UserService implements UserDetailsService {
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst()
                 .orElseThrow(() -> new UserNotFoundException("User with email='%s' wasn't found".formatted(email)));
-    }
-
-    public boolean existsEmail(String email) {
-        log.info("Checking the uniqueness of the email: " + email);
-        return userRepository.findAll()
-                .stream()
-                .anyMatch(user -> user.getEmail().equals(email));
     }
 
     public List<User> getAllUsers() {

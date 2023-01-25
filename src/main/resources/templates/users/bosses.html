@@ -21,7 +21,7 @@
                             </div>
                             <h4 class="mb-2" th:text="${boss.getEmail()}"></h4>
                             <p class="text-muted mb-4" th:text="${boss.getRole()}"></p>
-                            <a th:href="@{'mailto: '+${boss.getEmail()}}"
+                            <a th:href="@{ 'mailto: ' + ${boss.getEmail()} }"
                                class="btn btn-primary btn-rounded btn-lg">
                                 Message now
                             </a>

@@ -10,7 +10,7 @@ CREATE TABLE articles (
     title VARCHAR(255) NOT NULL UNIQUE,
     content TEXT NOT NULL,
     thumbnail TEXT DEFAULT NULL,
-    local_date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE users (
@@ -26,10 +26,10 @@ CREATE TABLE comments (
     article_id UUID REFERENCES articles(id) NOT NULL,
     user_id BIGINT REFERENCES users(id) NOT NULL,
     content TEXT NOT NULL,
-    local_date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-INSERT INTO articles (id, title, content, thumbnail, local_date_time) VALUES
+INSERT INTO articles (id, title, content, thumbnail, created_at) VALUES
     ('40e6215d-b5c6-4896-987c-f30f3678f608',
      'QAnon, adrift after Trump’s defeat, finds new life in Elon Musk’s Twitter',
      '',
@@ -63,7 +63,7 @@ INSERT INTO users (email, password, role, avatar) VALUES
     ('moderator2@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'ROLE_MODERATOR', NULL),
     ('admin@gmail.com', '$2a$12$zfpFafvo1HSyBh.rF6XNPeKpVIdA49iqGdKtV/BBlUlFu8WWT8squ', 'ROLE_ADMIN', NULL);
 
-INSERT INTO comments (article_id, user_id, content, local_date_time) VALUES
+INSERT INTO comments (article_id, user_id, content, created_at) VALUES
     ('40e6215d-b5c6-4896-987c-f30f3678f608', 1, 'Good news', '2022-12-25T00:40:23'),
     ('40e6215d-b5c6-4896-987c-f30f3678f608', 2, 'Hello there', '2022-12-25T00:40:23'),
     ('40e6215d-b5c6-4896-987c-f30f3678f608', 3, 'Hi', '2022-12-25T00:40:23'),
