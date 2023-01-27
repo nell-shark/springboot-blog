@@ -13,6 +13,6 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     @Query("SELECT article " +
             "FROM Article article " +
             "WHERE LOWER(article.title) LIKE LOWER(CONCAT('%',:search, '%')) " +
-            "OR LOWER(article.content) LIKE LOWER(CONCAT('%',:search, '%')) ")
+            "OR LOWER(article.content) LIKE LOWER(CONCAT('%',:search, '%'))")
     List<Article> doSearch(String search);
 }
