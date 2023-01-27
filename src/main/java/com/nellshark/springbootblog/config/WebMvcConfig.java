@@ -4,15 +4,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import static com.nellshark.springbootblog.service.FileService.APP_LOCATION;
-import static com.nellshark.springbootblog.service.FileService.STORAGE_FOLDER;
+import static com.nellshark.springbootblog.service.FileService.STORAGE_LOCATION;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/storage/**")
-                .addResourceLocations("file:" + APP_LOCATION + STORAGE_FOLDER + "/");
+                .addResourceLocations("file:" + STORAGE_LOCATION + "/");
     }
 }

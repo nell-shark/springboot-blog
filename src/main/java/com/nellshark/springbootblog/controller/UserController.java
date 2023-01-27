@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -64,9 +65,10 @@ public class UserController {
     @PostMapping
     public ModelAndView createNewUser(@ModelAttribute(name = "newUser") @Valid User user,
                                       BindingResult bindingResult,
-                                      HttpServletRequest request) throws IOException {
+                                      HttpServletRequest request) throws IOException, ServletException {
         if (bindingResult.hasErrors()) return new ModelAndView("redirect:/users/sign-up");
-        userService.saveAndAuthenticate(user, request);
+        userService.save(user);
+        userService.authenticateUserAndSetSession(user, request);
         return new ModelAndView("redirect:/users/" + user.getId());
     }
 

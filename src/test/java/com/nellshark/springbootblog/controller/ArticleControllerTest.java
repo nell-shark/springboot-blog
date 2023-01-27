@@ -132,6 +132,7 @@ class ArticleControllerTest {
     @WithMockUser(authorities = "EDIT_ARTICLES")
     void should_redirect_when_userWithAuthorityUpdatesArticle() throws Exception {
         Article article = Article.builder().id(UUID.randomUUID()).title("Title").content("Content").build();
+        doNothing().when(articleService).save(any(Article.class), isNull());
 
         mockMvc.perform(patch("/articles/" + article.getId())
                         .flashAttrs(Map.of("article", article))
@@ -144,7 +145,7 @@ class ArticleControllerTest {
     @WithMockUser(authorities = "DELETE_ARTICLES")
     void should_redirect_when_userWithAuthorityDeletesArticleById() throws Exception {
         UUID uuid = UUID.randomUUID();
-        doNothing().when(articleService).deleteArticleById(uuid);
+        doNothing().when(articleService).deleteArticleById(any(UUID.class));
 
         mockMvc.perform(delete("/articles/" + uuid)
                         .with(csrf()))

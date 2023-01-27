@@ -48,28 +48,18 @@ public class ArticleService {
     }
 
     public void save(Article article, MultipartFile thumbnail) throws IOException {
+        log.info("Saving the article with thumbnail in db: " + article);
         if (thumbnail != null && !thumbnail.isEmpty()) {
-            String image = saveAvatar(article, thumbnail);
-            article.setThumbnail(image);
+            String fileFolder = "/articles/" + article.getId();
+            String _thumbnail = fileService.saveMultipartFileToLocalStorage(thumbnail, fileFolder);
+            article.setThumbnail(_thumbnail);
         }
-        save(article);
-    }
-
-    private String saveAvatar(Article article, MultipartFile thumbnail) throws IOException {
-        log.info("Saving the User's Avatar: " + thumbnail);
-        String fileFolder = "/articles/" + article.getId() + "/";
-
-        return fileService.saveMultipartFileToLocalStorage(thumbnail, fileFolder);
+        articleRepository.save(article);
     }
 
     public void deleteArticleById(UUID id) {
         log.info("Deleting the article by id: " + id);
         Article article = getArticleById(id);
         articleRepository.delete(article);
-    }
-
-    public void deleteAllArticles() {
-        log.info("Deleting all articles");
-        articleRepository.deleteAll();
     }
 }

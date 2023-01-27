@@ -111,8 +111,8 @@ class UserControllerTest {
     @Test
     void should_redirect_when_createNewUser() throws Exception {
         User user = User.builder().id(1L).email("test@gmail.com").password("password").build();
-
-        doNothing().when(userService).saveAndAuthenticate(any(User.class), any(HttpServletRequest.class));
+        doNothing().when(userService).save(user);
+        doNothing().when(userService).authenticateUserAndSetSession(any(User.class), any(HttpServletRequest.class));
 
         mockMvc.perform(post("/users")
                         .flashAttrs(Map.of("newUser", user))
@@ -125,7 +125,6 @@ class UserControllerTest {
     @WithMockUser(roles = "ADMIN")
     void should_redirect_when_updateUser() throws Exception {
         User user = User.builder().id(1L).email("test@gmail.com").password("password").build();
-
         doNothing().when(userService).save(any(User.class), isNull());
 
         mockMvc.perform(patch("/users/" + user.getId())
@@ -133,6 +132,5 @@ class UserControllerTest {
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(redirectedUrl("/users/" + user.getId()));
-
     }
 }

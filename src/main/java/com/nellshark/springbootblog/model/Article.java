@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.nellshark.springbootblog.service.FileService.STORAGE_FOLDER;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -59,6 +57,6 @@ public class Article {
 
     public Optional<String> getThumbnail() {
         if (thumbnail == null) return Optional.empty();
-        return Optional.of(STORAGE_FOLDER + "/articles/" + getId() + "/" + thumbnail);
+        return Optional.of("/storage/articles/" + getId() + "/" + thumbnail);
     }
 }

@@ -22,25 +22,20 @@ import static org.apache.http.entity.ContentType.IMAGE_WEBP;
 @Service
 @Slf4j
 public class FileService {
-    public static final String APP_LOCATION = System.getProperty("user.dir").replace("\\", "/");
-    public static final String STORAGE_FOLDER = "/storage";
+    public static final String STORAGE_LOCATION = System.getProperty("user.dir").replace("\\", "/")
+            + "/storage";
 
     public String saveMultipartFileToLocalStorage(MultipartFile file, String fileFolder) throws IOException {
         log.info("Saving Image to the local storage: " + file);
-        if (file == null || file.isEmpty()) throw new FileIsEmptyException("Cannot save the empty file");
+        isEmpty(file);
+        isImage(file);
 
-        if (!Set.of(IMAGE_JPEG.getMimeType(),
-                        IMAGE_PNG.getMimeType(),
-                        IMAGE_WEBP.getMimeType())
-                .contains(file.getContentType()))
-            throw new FileIsNotImageException("File must be an image: " + file.getContentType());
+        String fileName = generateFileName()
+                + EXTENSION_SEPARATOR
+                + getExtension(file.getOriginalFilename());
 
-        String extension = getExtension(file.getOriginalFilename());
-        String fileName = generateFileName() + EXTENSION_SEPARATOR + extension;
-
-        Path path = Path.of(APP_LOCATION
-                + STORAGE_FOLDER
-                + fileFolder
+        Path path = Path.of(STORAGE_LOCATION
+                + fileFolder + "/"
                 + fileName);
 
         try {
@@ -54,7 +49,19 @@ public class FileService {
         return fileName;
     }
 
-    public String generateFileName() {
+    private void isEmpty(MultipartFile file) {
+        if (file == null || file.isEmpty()) throw new FileIsEmptyException("Cannot save the empty file");
+    }
+
+    private void isImage(MultipartFile file) {
+        if (!Set.of(IMAGE_JPEG.getMimeType(),
+                        IMAGE_PNG.getMimeType(),
+                        IMAGE_WEBP.getMimeType())
+                .contains(file.getContentType()))
+            throw new FileIsNotImageException("File must be an image: " + file.getContentType());
+    }
+
+    private String generateFileName() {
         log.info("Generating a file name");
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss-SSS"));
     }

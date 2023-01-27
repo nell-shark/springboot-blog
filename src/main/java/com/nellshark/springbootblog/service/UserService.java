@@ -11,12 +11,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -69,37 +67,25 @@ public class UserService implements UserDetailsService {
                 .collect(toSet());
     }
 
-    public void save(User user, MultipartFile avatar) throws IOException {
-        log.info("Saving the user in the db: " + user);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (avatar != null && !avatar.isEmpty()) {
-            String _avatar = saveAvatar(user, avatar);
-            user.setAvatar(_avatar);
-        }
+    public void save(User user) throws IOException {
         userRepository.save(user);
     }
 
-    public void saveAndAuthenticate(User user, HttpServletRequest request) throws IOException {
-        save(user, null);
-        signIn(user, request);
-    }
-
-    public void signIn(User user, HttpServletRequest request) {
+    public void authenticateUserAndSetSession(User user, HttpServletRequest request) {
         request.getSession();
         Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
-    public void signOut(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) new SecurityContextLogoutHandler().logout(request, response, auth);
-    }
-
-    private String saveAvatar(User user, MultipartFile avatar) throws IOException {
-        log.info("Saving the User's Avatar: " + avatar);
-        String fileFolder = "/users/" + user.getId() + "/";
-
-        return fileService.saveMultipartFileToLocalStorage(avatar, fileFolder);
+    public void save(User user, MultipartFile avatar) throws IOException {
+        log.info("Saving the user in the db: " + user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (avatar != null && !avatar.isEmpty()) {
+            String fileFolder = "/users/" + user.getId();
+            String _avatar = fileService.saveMultipartFileToLocalStorage(avatar, fileFolder);
+            user.setAvatar(_avatar);
+        }
+        userRepository.save(user);
     }
 
     public void deleteUserById(Long id) {
