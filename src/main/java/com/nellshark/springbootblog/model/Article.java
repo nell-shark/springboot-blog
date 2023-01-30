@@ -30,8 +30,8 @@ import java.util.UUID;
 public class Article {
     @Id
     @Column(name = "id", nullable = false, unique = true)
-    @NonNull
-    private UUID id;
+    @Builder.Default
+    private UUID id = UUID.randomUUID();
 
     @Column(name = "title", unique = true, nullable = false)
     @NotEmpty(message = "Title cannot be empty")

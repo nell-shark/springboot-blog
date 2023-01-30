@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -33,7 +32,7 @@ class ArticleServiceTest {
 
     @Test
     void should_returnListOfArticles_when_getAllArticles() {
-        Article article = Article.builder().id(UUID.randomUUID()).title("Title").content("Content").build();
+        Article article = Article.builder().title("Title").content("Content").build();
         List<Article> articleList = List.of(article);
         when(articleRepository.findAll()).thenReturn(articleList);
 
@@ -44,7 +43,7 @@ class ArticleServiceTest {
 
     @Test
     void should_returnArticle_when_getArticleById() {
-        Article article = Article.builder().id(UUID.randomUUID()).title("Title").content("Content").build();
+        Article article = Article.builder().title("Title").content("Content").build();
         when(articleRepository.findAll()).thenReturn(List.of(article));
 
         Article result = articleService.getArticleById(article.getId());
@@ -54,7 +53,7 @@ class ArticleServiceTest {
 
     @Test
     void should_returnListOfArticles_when_doSearch() {
-        Article article = Article.builder().id(UUID.randomUUID()).title("Title").content("Content").build();
+        Article article = Article.builder().title("Title").content("Content").build();
         List<Article> articleList = List.of(article);
         String search = "Search";
         when(articleRepository.doSearch(search)).thenReturn(articleList);
@@ -66,7 +65,7 @@ class ArticleServiceTest {
 
     @Test
     void should_saveArticle() {
-        Article article = Article.builder().id(UUID.randomUUID()).title("Title").content("Content").build();
+        Article article = Article.builder().title("Title").content("Content").build();
 
         articleService.save(article);
         ArgumentCaptor<Article> commentArgumentCaptor = ArgumentCaptor.forClass(Article.class);
@@ -77,7 +76,7 @@ class ArticleServiceTest {
 
     @Test
     void should_deleteArticle_when_deleteArticleById() {
-        Article article = Article.builder().id(UUID.randomUUID()).title("Title").content("Content").build();
+        Article article = Article.builder().title("Title").content("Content").build();
         List<Article> articleList = List.of(article);
         when(articleRepository.findAll()).thenReturn(articleList);
 

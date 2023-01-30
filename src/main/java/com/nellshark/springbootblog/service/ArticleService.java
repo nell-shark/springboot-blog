@@ -50,10 +50,12 @@ public class ArticleService {
     public void save(Article article, MultipartFile thumbnail) throws IOException {
         log.info("Saving the article with thumbnail in db: " + article);
         if (thumbnail != null && !thumbnail.isEmpty()) {
+            if (article.getId() == null) article.setId(UUID.randomUUID());
             String fileFolder = "/articles/" + article.getId();
             String _thumbnail = fileService.saveMultipartFileToLocalStorage(thumbnail, fileFolder);
             article.setThumbnail(_thumbnail);
         }
+
         articleRepository.save(article);
     }
 

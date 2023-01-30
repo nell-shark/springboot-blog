@@ -21,14 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -47,7 +45,7 @@ class ArticleControllerTest {
 
     @Test
     void should_returnModelAndView_when_getIndexPage() throws Exception {
-        Article article = Article.builder().id(UUID.randomUUID()).title("Title").content("Content").build();
+        Article article = Article.builder().title("Title").content("Content").build();
         when(articleService.getAllArticles()).thenReturn(List.of(article));
 
         MvcResult result = mockMvc.perform(get("/articles"))
@@ -62,21 +60,7 @@ class ArticleControllerTest {
     @Test
     @WithMockUser(authorities = "CREATE_ARTICLES")
     void should_redirect_when_userWithAuthorityGetsArticleCreatePage() throws Exception {
-        UUID uuid = UUID.randomUUID();
-        mockStatic(UUID.class);
-        when(UUID.randomUUID()).thenReturn(uuid);
-
-        mockMvc.perform(get("/articles/create"))
-                .andDo(print())
-                .andExpect(redirectedUrl("/articles/create/" + uuid));
-    }
-
-    @Test
-    @WithMockUser(authorities = "CREATE_ARTICLES")
-    void should_returnModelAndView_when_userWithAuthorityGetsArticleCreatePage() throws Exception {
-        UUID uuid = UUID.randomUUID();
-
-        MvcResult result = mockMvc.perform(get("/articles/create/" + uuid))
+        MvcResult result = mockMvc.perform(get("/articles/create"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -86,7 +70,7 @@ class ArticleControllerTest {
 
     @Test
     void should_returnModelAndView_when_getArticleByIdPage() throws Exception {
-        Article article = Article.builder().id(UUID.randomUUID()).title("Title").content("Content").build();
+        Article article = Article.builder().title("Title").content("Content").build();
 
         when(articleService.getArticleById(article.getId())).thenReturn(article);
 
@@ -102,7 +86,7 @@ class ArticleControllerTest {
     @Test
     @WithMockUser(authorities = "EDIT_ARTICLES")
     void should_returnModelAndView_when_userWithAuthorityGetsArticleEditPage() throws Exception {
-        Article article = Article.builder().id(UUID.randomUUID()).title("Title").content("Content").build();
+        Article article = Article.builder().title("Title").content("Content").build();
         when(articleService.getArticleById(article.getId())).thenReturn(article);
 
         MvcResult result = mockMvc.perform(get("/articles/edit/" + article.getId()))
@@ -114,24 +98,11 @@ class ArticleControllerTest {
         assertEquals("articles/edit", result.getModelAndView().getViewName());
     }
 
-    @Test
-    @WithMockUser(authorities = "CREATE_ARTICLES")
-    void should_redirect_when_userWithAuthorityCreatesArticle() throws Exception {
-        Article article = Article.builder().id(UUID.randomUUID()).title("title").content("content").build();
-
-        doNothing().when(articleService).save(any(Article.class), isNull());
-
-        mockMvc.perform(post("/articles/" + article.getId())
-                        .flashAttrs(Map.of("newArticle", article))
-                        .with(csrf()))
-                .andDo(print())
-                .andExpect(redirectedUrl("/articles/" + article.getId()));
-    }
 
     @Test
     @WithMockUser(authorities = "EDIT_ARTICLES")
     void should_redirect_when_userWithAuthorityUpdatesArticle() throws Exception {
-        Article article = Article.builder().id(UUID.randomUUID()).title("Title").content("Content").build();
+        Article article = Article.builder().title("Title").content("Content").build();
         doNothing().when(articleService).save(any(Article.class), isNull());
 
         mockMvc.perform(patch("/articles/" + article.getId())

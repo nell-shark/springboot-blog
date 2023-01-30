@@ -45,13 +45,7 @@ public class ArticleController {
 
     @GetMapping("create")
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
-    public ModelAndView redirectToArticleCreatePageWithRandomUUID() {
-        return new ModelAndView("redirect:/articles/create/" + UUID.randomUUID());
-    }
-
-    @GetMapping("create/{id}")
-    @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
-    public ModelAndView getArticleCreatePage(@PathVariable("id") UUID id) {
+    public ModelAndView getArticleCreatePage() {
         return new ModelAndView("articles/create")
                 .addObject("newArticle", new Article());
     }
@@ -69,15 +63,14 @@ public class ArticleController {
                 .addObject("article", articleService.getArticleById(id));
     }
 
-    @PostMapping("{id}")
+    @PostMapping
     @PreAuthorize("hasAuthority('CREATE_ARTICLES')")
-    public ModelAndView createArticle(@PathVariable("id") UUID id,
-                                      @ModelAttribute("newArticle") @Valid Article article,
+    public ModelAndView createArticle(@ModelAttribute("newArticle") @Valid Article article,
                                       BindingResult bindingResult,
                                       @RequestParam(value = "file", required = false) MultipartFile thumbnail) throws IOException {
         if (bindingResult.hasErrors()) return new ModelAndView("redirect:/articles/create");
         articleService.save(article, thumbnail);
-        return new ModelAndView("redirect:/articles/" + id);
+        return new ModelAndView("redirect:/articles/" + article.getId());
     }
 
     @PatchMapping("{id}")
