@@ -11,11 +11,7 @@ This is a blog written using Spring Boot. It is possible to add and remove: arti
 [License](#license) •
 [Contact](#contact)
 
-<hr>
-
 ![screenshot](screenshot.png)
-
-<hr>
 
 </div>
 
